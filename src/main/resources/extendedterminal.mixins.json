@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.myogoo.extendedterminal.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "extendedterminal.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

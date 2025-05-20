@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ab",
+    "c "
+  ],
+  "key": {
+    "a": {
+      "item": "ae2:crafting_terminal"
+    },
+    "c" : {
+      "item" : "moreterminal:integration_processor"
+    },
+    "b": {
+      "item" : "extendedcrafting:elite_table"
+    }
+
+  },
+  "result": {
+    "item": "moreterminal:elite_crafting_terminal"
+  }
+}
