@@ -1,13 +1,10 @@
 package com.myogoo.extendedterminal.init;
 
-import appeng.menu.AEBaseMenu;
-import appeng.menu.implementations.MenuTypeBuilder;
 import com.myogoo.extendedterminal.ExtendedTerminal;
-import com.myogoo.extendedterminal.menu.BasicTerminalMenu;
+import com.myogoo.extendedterminal.menu.extendedcrafting.BasicTerminalMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.minecraft.client.gui.screens.MenuScreens;
 
 import java.util.function.Supplier;
 

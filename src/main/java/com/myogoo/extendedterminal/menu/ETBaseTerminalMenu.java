@@ -3,75 +3,52 @@ package com.myogoo.extendedterminal.menu;
 import appeng.api.inventories.ISegmentedInventory;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.storage.ITerminalHost;
-import appeng.client.Point;
-import appeng.client.gui.style.SlotPosition;
 import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.ICraftingGridMenu;
 import appeng.helpers.InventoryAction;
 import appeng.me.storage.LinkStatusRespectingInventory;
-import appeng.menu.AEBaseMenu;
-import appeng.menu.SlotSemantics;
-import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.me.common.MEStorageMenu;
 import appeng.menu.slot.CraftingMatrixSlot;
 import appeng.menu.slot.CraftingTermSlot;
 import appeng.parts.reporting.CraftingTerminalPart;
-import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.TableCraftingInput;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.google.common.base.Preconditions;
 import com.myogoo.extendedterminal.ExtendedTerminal;
-import com.myogoo.extendedterminal.init.ETMenus;
-import com.myogoo.extendedterminal.menu.slot.BasicCraftingSlot;
-import com.myogoo.extendedterminal.part.BasicExtendedTerminalPart;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.*;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class BasicTerminalMenu extends MEStorageMenu implements ICraftingGridMenu {
-    public static final MenuType<BasicTerminalMenu> TYPE = MenuTypeBuilder
-            .create(BasicTerminalMenu::new, ITerminalHost.class)
-            .buildUnregistered(ExtendedTerminal.makeId("basic_terminal"));
-
-    private static final String ACTION_CLEAR_TO_PLAYER = "clearToPlayer";
-
+public class ETBaseTerminalMenu<R extends Recipe<? extends CraftingInput>> extends MEStorageMenu implements ICraftingGridMenu {
+    private RecipeHolder<R> currentRecipe;
+    private final CraftingTermSlot outputSlot;
     private final ISegmentedInventory craftingInventoryHost;
-    private final CraftingMatrixSlot[] craftingSlots = new CraftingMatrixSlot[9];
+    private final CraftingMatrixSlot[] craftingSlots;
+    private final ETMenuType etMenuType;
     @Nullable
     private CraftingInput lastTestedInput;
-    private final CraftingTermSlot outputSlot;
-    private RecipeHolder<ITableRecipe> currentRecipe;
+    private static final String ACTION_CLEAR_TO_PLAYER = "clearToPlayer";
 
-    private final int size;
 
-    public BasicTerminalMenu(int id, Inventory playerInventory, ITerminalHost host) {
-        this(TYPE, id, playerInventory, host,true);
-    }
-
-    public BasicTerminalMenu(MenuType<?> menuType, int id, Inventory playerInventory, ITerminalHost host, boolean
-                             bindInventory) {
-        super(menuType, id, playerInventory, host, bindInventory);
-        this.size = 3;
+    public ETBaseTerminalMenu(MenuType<?> menuType, int id, Inventory ip, ITerminalHost host, ETMenuType etMenuType) {
+        super(menuType, id, ip, host);
+        this.etMenuType = etMenuType;
 
         this.craftingInventoryHost = (ISegmentedInventory) host;
-
+        this.craftingSlots = new CraftingMatrixSlot[etMenuType.getGridSize()];
         var craftingGridInv = this.craftingInventoryHost
-                        .getSubInventory(BasicExtendedTerminalPart.BASIC_CRAFTING_INV);
-
-        for (int i = 0; i < this.size * this.size; i++) {
-            this.addSlot(this.craftingSlots[i] = new CraftingMatrixSlot(this, craftingGridInv, i),
-                    ETSlotSemantics.BASIC_CRAFTING_GRID);
+                .getSubInventory(etMenuType.getCraftingInventory());
+        for(int i = 0; i < etMenuType.getGridSize(); i++) {
+            this.addSlot(this.craftingSlots[i] = new CraftingMatrixSlot(this,craftingGridInv,i), etMenuType.getSlotSemantic().getB());
         }
+
 
         var linkStatusInventory = new LinkStatusRespectingInventory(host.getInventory(), this::getLinkStatus);
         this.addSlot(this.outputSlot = new CraftingTermSlot(this.getPlayerInventory().player, this.getActionSource(),
@@ -96,14 +73,14 @@ public class BasicTerminalMenu extends MEStorageMenu implements ICraftingGridMen
             testItems.add(craftingSlot.getItem().copy());
         }
 
-        var testInput = TableCraftingInput.of(this.size,this.size,testItems,1);
+        var testInput = TableCraftingInput.of(etMenuType.getSize(),etMenuType.getSize(),testItems,etMenuType.getTier());
 
         if (testInput.equals(this.lastTestedInput) && !forceUpdate) {
             return;
         }
 
         var level = getPlayer().level();
-        this.currentRecipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), testInput, level)
+        this.currentRecipe = level.getRecipeManager().getRecipeFor((RecipeType<ITableRecipe>)etMenuType.getRecipeType(), testInput, level)
                 .orElse(null);
         if(this.currentRecipe == null) {
             this.outputSlot.set(ItemStack.EMPTY);
@@ -111,14 +88,10 @@ public class BasicTerminalMenu extends MEStorageMenu implements ICraftingGridMen
             this.outputSlot.set(this.currentRecipe.value().assemble(testInput,level.registryAccess()));
         }
     }
-    public RecipeHolder<ITableRecipe> getCurrentRecipe() {
+    public RecipeHolder<R> getCurrentRecipe() {
         return this.currentRecipe;
     }
 
-    @Override
-    public InternalInventory getCraftingMatrix() {
-        return this.craftingInventoryHost.getSubInventory(CraftingTerminalPart.INV_CRAFTING);
-    }
 
     @Override
     public boolean hasIngredient(Ingredient ingredient, Object2IntOpenHashMap<Object> reservedAmounts) {
@@ -137,4 +110,9 @@ public class BasicTerminalMenu extends MEStorageMenu implements ICraftingGridMen
         return super.hasIngredient(ingredient, reservedAmounts);
     }
 
+
+    @Override
+    public InternalInventory getCraftingMatrix() {
+        return this.craftingInventoryHost.getSubInventory(etMenuType.getCraftingInventory());
+    }
 }

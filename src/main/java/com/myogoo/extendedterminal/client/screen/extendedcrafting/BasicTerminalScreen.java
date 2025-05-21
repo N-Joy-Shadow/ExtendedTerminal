@@ -1,17 +1,14 @@
-package com.myogoo.extendedterminal.client.screen;
+package com.myogoo.extendedterminal.client.screen.extendedcrafting;
 
 import appeng.api.config.ActionItems;
-import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.me.common.MEStorageScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.ActionButton;
 import appeng.core.AEConfig;
-import com.myogoo.extendedterminal.menu.BasicTerminalMenu;
+import com.myogoo.extendedterminal.menu.extendedcrafting.BasicTerminalMenu;
 import com.myogoo.extendedterminal.menu.ETSlotSemantics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 
 import java.util.List;
@@ -36,10 +33,11 @@ public class BasicTerminalScreen extends MEStorageScreen<BasicTerminalMenu> {
     @Override
     public void init() {
         super.init();
-        LOGGER.info(String.format("%d %d\n",this.leftPos, this.topPos));
+
         List<Slot> craftingSlots = this.getMenu().getSlots(ETSlotSemantics.BASIC_CRAFTING_GRID);
-        int craftGridStartX = this.leftPos + 10;
-        int craftGridStartY = this.topPos + 10;
+        Slot firstSlot = craftingSlots.getFirst();
+        int craftGridStartX = firstSlot.x;
+        int craftGridStartY = firstSlot.y;
         for(int row = 0; row < 3; row++) {
             for(int col = 0; col < 3; col++) {
                 int index = row * 3 + col;
@@ -51,6 +49,4 @@ public class BasicTerminalScreen extends MEStorageScreen<BasicTerminalMenu> {
             }
         }
     }
-
-
 }
