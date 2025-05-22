@@ -19,7 +19,7 @@ public class ETBaseTerminalScreen<T extends ETBaseTerminalMenu> extends MEStorag
     @Override
     public void onClose() {
         if(AEConfig.instance().isClearGridOnClose()) {
-            this.getMenu().clear();
+            this.getMenu().clearCraftingGrid();
         }
         super.onClose();
     }

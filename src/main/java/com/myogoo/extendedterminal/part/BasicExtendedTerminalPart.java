@@ -17,7 +17,7 @@ import net.minecraft.world.inventory.MenuType;
 
 public class BasicExtendedTerminalPart extends AbstractTerminalPart {
 
-    public static final ResourceLocation BASIC_CRAFTING_INV = ExtendedTerminal.makeId("basic_crafting_inventory");
+    public static final ResourceLocation BASIC_CRAFTING_INV = ExtendedTerminal.makeId("basic_terminal_inventory");
 
     @PartModels
     private static final ResourceLocation MODEL_ON = AppEng.makeId("part/crafting_terminal_off");
@@ -28,10 +28,11 @@ public class BasicExtendedTerminalPart extends AbstractTerminalPart {
 
     public static final IPartModel MODEL = new PartModel(MODEL_BASE, MODEL_ON, MODEL_STATUS_ON);
 
-    private final AppEngInternalInventory craftingGrid = new AppEngInternalInventory(this, 3*3);
+    private final AppEngInternalInventory craftingGrid;
 
     public BasicExtendedTerminalPart(IPartItem<?> partItem) {
         super(partItem);
+        this.craftingGrid = new AppEngInternalInventory(this, 3*3);
         getMainNode()
                 .setIdlePowerUsage(1)
                 .setFlags(GridFlags.REQUIRE_CHANNEL);

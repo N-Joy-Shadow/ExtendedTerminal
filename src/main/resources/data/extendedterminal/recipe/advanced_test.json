@@ -1,0 +1,19 @@
+{
+  "type": "extendedcrafting:shaped_table",
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "key" : {
+    "A": {
+      "item": "minecraft:oak_log"
+    },
+    "B": {
+      "item": "ae2:controller"
+    }
+  },
+  "result": {
+    "id": "ae2:drive"
+  }
+}

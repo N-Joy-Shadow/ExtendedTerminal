@@ -16,4 +16,7 @@ public final class ETSlotSemantics {
     public static final SlotSemantic ULTIMATE_CRAFTING_GRID = SlotSemantics.register("ULTIMATE_CRAFTING_GRID", false);
     public static final SlotSemantic ULTIMATE_CRAFTING_RESULT = SlotSemantics.register("ULTIMATE_CRAFTING_RESULT", false);
 
+    public static final SlotSemantic AVARITIA_CRAFTING_GRID = SlotSemantics.register("AVARITIA_CRAFTING_GRID", false);
+    public static final SlotSemantic AVARITIA_CRAFTING_RESULT = SlotSemantics.register("AVARITIA_CRAFTING_RESULT", false);
+
 }

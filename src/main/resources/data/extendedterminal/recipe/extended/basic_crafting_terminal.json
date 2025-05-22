@@ -9,7 +9,7 @@
       "item": "ae2:crafting_terminal"
     },
     "c" : {
-      "item" : "moreterminal:integration_processor"
+      "item" : "extendedterminal:integration_processor"
     },
     "b" : {
       "item" : "extendedcrafting:basic_table"
@@ -17,6 +17,6 @@
 
   },
   "result": {
-    "item": "moreterminal:basic_crafting_terminal"
+    "item": "extendedterminal:basic_crafting_terminal"
   }
 }
