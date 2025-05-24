@@ -136,10 +136,7 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
 
     @Override
     public void doAction(ServerPlayer player, InventoryAction action, int slot, long id) {
-        super.doAction(player, action, slot, id);
-
         var s = this.getSlot(slot);
-
         if(s instanceof ETBaseCraftingSlot craftingSlot) {
             switch (action) {
                 case CRAFT_SHIFT:
@@ -147,10 +144,10 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
                 case CRAFT_ITEM:
                 case CRAFT_STACK:
                     craftingSlot.doClick(action, player);
-                default:
-
             }
+            return;
         }
+        super.doAction(player, action, slot, id);
     }
 
     protected boolean isCraftable(ItemStack itemStack) {
