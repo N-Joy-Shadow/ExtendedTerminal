@@ -13,7 +13,6 @@ public class BasicTerminalMenu extends ETBaseTerminalMenu  {
             .create(BasicTerminalMenu::new, ITerminalHost.class)
             .buildUnregistered(ExtendedTerminal.makeId("basic_terminal"));
 
-
     public BasicTerminalMenu(MenuType<?> menuType, int id, Inventory ip, ITerminalHost host) {
         super(menuType, id, ip, host, ETMenuType.BASIC_TERMINAL);
     }

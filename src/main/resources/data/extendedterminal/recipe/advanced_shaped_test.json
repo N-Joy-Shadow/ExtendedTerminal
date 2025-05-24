@@ -1,20 +1,25 @@
 {
   "type": "extendedcrafting:shaped_table",
-  "tier" : 1,
+  "tier": 2,
   "pattern": [
-    "AAA",
-    "ABA",
-    "AAA"
+    "AAAAA",
+    "ABBBA",
+    "ABBBA",
+    "AABAA",
+    "CAAAC"
   ],
-  "key" : {
+  "key": {
     "A": {
       "item": "minecraft:oak_log"
     },
     "B": {
+      "item": "ae2:fluix_block"
+    },
+    "C": {
       "item": "ae2:controller"
     }
   },
   "result": {
-    "id": "ae2:drive"
+    "id": "ae2:fluix_upgrade_smithing_template"
   }
 }

@@ -20,7 +20,6 @@ public enum ETMenuType {
 
     AVARITIA_TERMINAL(9, -1, ETSlotSemantics.AVARITIA_CRAFTING_GRID, ETSlotSemantics.AVARITIA_CRAFTING_RESULT),;
 
-
     private final SlotSemantic slotSemantic_GRID;
     private final SlotSemantic slotSemantic_RESULT;
     private final int size;

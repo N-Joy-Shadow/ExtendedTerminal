@@ -1,7 +1,6 @@
 package com.myogoo.extendedterminal.part;
 
 import appeng.api.inventories.InternalInventory;
-import appeng.api.networking.GridFlags;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.core.AppEng;
@@ -9,15 +8,12 @@ import appeng.items.parts.PartModels;
 import appeng.parts.PartModel;
 import appeng.parts.reporting.AbstractTerminalPart;
 import appeng.util.inv.AppEngInternalInventory;
-import com.myogoo.extendedterminal.ExtendedTerminal;
-import com.myogoo.extendedterminal.menu.extendedcrafting.BasicTerminalMenu;
+import com.myogoo.extendedterminal.menu.ETMenuType;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
 
-public class BasicExtendedTerminalPart extends AbstractTerminalPart {
-
-    public static final ResourceLocation BASIC_CRAFTING_INV = ExtendedTerminal.makeId("basic_terminal_inventory");
+public class ETBaseTerminalPart extends AbstractTerminalPart {
 
     @PartModels
     private static final ResourceLocation MODEL_ON = AppEng.makeId("part/crafting_terminal_off");
@@ -28,14 +24,13 @@ public class BasicExtendedTerminalPart extends AbstractTerminalPart {
 
     public static final IPartModel MODEL = new PartModel(MODEL_BASE, MODEL_ON, MODEL_STATUS_ON);
 
-    private final AppEngInternalInventory craftingGrid;
+    private AppEngInternalInventory craftingGrid;
+    private final ETMenuType etMenuType;
 
-    public BasicExtendedTerminalPart(IPartItem<?> partItem) {
+    public ETBaseTerminalPart(IPartItem<?> partItem, ETMenuType etMenuType) {
         super(partItem);
-        this.craftingGrid = new AppEngInternalInventory(this, 3*3);
-        getMainNode()
-                .setIdlePowerUsage(1)
-                .setFlags(GridFlags.REQUIRE_CHANNEL);
+        this.etMenuType = etMenuType;
+        this.craftingGrid = new AppEngInternalInventory(this, etMenuType.getGridSize());
     }
 
     @Override
@@ -44,17 +39,23 @@ public class BasicExtendedTerminalPart extends AbstractTerminalPart {
     }
 
     @Override
-    public MenuType<?> getMenuType(Player p) {
-        return BasicTerminalMenu.TYPE;
+    public InternalInventory getSubInventory(ResourceLocation id) {
+        if(id.equals(etMenuType.getCraftingInventory())){
+            return craftingGrid;
+        }
+        return super.getSubInventory(id);
     }
 
     @Override
-    public InternalInventory getSubInventory(ResourceLocation id) {
-        if (id.equals(BASIC_CRAFTING_INV)) {
-            return craftingGrid;
-        } else {
-            return super.getSubInventory(id);
-        }
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
+        this.craftingGrid.readFromNBT(data, "craftingGrid", registries);
+    }
+
+    @Override
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
+        this.craftingGrid.writeToNBT(data, "craftingGrid", registries);
     }
 
 }

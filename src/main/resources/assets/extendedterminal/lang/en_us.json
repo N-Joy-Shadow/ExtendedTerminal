@@ -1,3 +1,5 @@
 {
-  "itemGroup.extendedterminal": "Extended Terminal"
+  "itemGroup.extendedterminal": "Extended Terminal",
+  "item.extendedterminal.basic_terminal": "Basic Extended Crafting Terminal",
+  "item.extendedterminal.advanced_terminal": "Advanced Extended Crafting Terminal",
 }

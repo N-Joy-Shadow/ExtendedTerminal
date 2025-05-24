@@ -8,7 +8,8 @@ import appeng.core.definitions.ItemDefinition;
 import appeng.items.parts.PartItem;
 import appeng.items.parts.PartModelsHelper;
 import com.myogoo.extendedterminal.ExtendedTerminal;
-import com.myogoo.extendedterminal.part.BasicExtendedTerminalPart;
+import com.myogoo.extendedterminal.part.extendedcrafting.AdvancedTerminalPart;
+import com.myogoo.extendedterminal.part.extendedcrafting.BasicExtendedTerminalPart;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -21,9 +22,8 @@ public class ETItems {
 
     public static final List<ItemDefinition<?>> ITEMS = new ArrayList<>();
 
-    public static final ItemDefinition<?> EXAMPLE_ITEM = createItem("example item", "example_item", Item::new);
-
     public static final ItemDefinition<?> BASIC_TERMINAL_PART_ITEM = createPart("basic crafting terminal", "basic_terminal", BasicExtendedTerminalPart.class, BasicExtendedTerminalPart::new);
+    public static final ItemDefinition<?> ADVANCED_TERMINAL_PART_ITEM = createPart("advanced crafting terminal", "advanced_terminal", AdvancedTerminalPart.class, AdvancedTerminalPart::new);
 
     private static <T extends Item> ItemDefinition<T> createItem(String name, String id, Function<Item.Properties, T> itemFactory) {
         var item = new ItemDefinition<>(name, REGISTER.registerItem(id, itemFactory));

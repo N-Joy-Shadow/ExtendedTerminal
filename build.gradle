@@ -24,6 +24,14 @@ repositories {
     maven {
         url 'https://maven.blakesmods.com'
     }
+    maven {
+        url "https://maven.shedaniel.me"
+    }
+    maven {
+        name = "Curios"
+        url = "https://maven.theillusivec4.top/"
+    }
+
 }
 
 base {
@@ -109,15 +117,20 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
-    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${JEI_version}"
-    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${JEI_version}"
+    //compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${JEI_version}"
+    //runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${JEI_version}"
 
-    // Applied Energistics 2 의존성 추가
     compileOnly "org.appliedenergistics:appliedenergistics2:${AE2_version}"
     runtimeOnly "org.appliedenergistics:appliedenergistics2:${AE2_version}"
 
     implementation "com.blakebr0.cucumber:Cucumber:${minecraft_version}-${Cucumber_version}"
     implementation "com.blakebr0.extendedcrafting:ExtendedCrafting:${minecraft_version}-${ExtendedCrafting_version}"
+
+    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${REI_version}"
+    runtimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${REI_version}"
+
+    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
+    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
 }
 

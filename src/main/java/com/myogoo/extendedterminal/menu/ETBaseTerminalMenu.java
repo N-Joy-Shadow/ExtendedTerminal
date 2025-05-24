@@ -2,6 +2,7 @@ package com.myogoo.extendedterminal.menu;
 
 import appeng.api.inventories.ISegmentedInventory;
 import appeng.api.inventories.InternalInventory;
+import appeng.api.networking.energy.IEnergySource;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.storage.ITerminalHost;
 import appeng.core.network.serverbound.InventoryActionPacket;
@@ -74,7 +75,6 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
         for(var craftingSlot : craftingSlots) {
             testItems.add(craftingSlot.getItem().copy());
         }
-
         var testInput = TableCraftingInput.of(etMenuType.getSize(),etMenuType.getSize(),testItems,etMenuType.getTier());
 
         if (testInput.equals(this.lastTestedInput) && !forceUpdate) {
@@ -92,6 +92,10 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
     }
     public RecipeHolder<ITableRecipe> getCurrentRecipe() {
         return this.currentRecipe;
+    }
+
+    public ETMenuType getEtMenuType() {
+        return etMenuType;
     }
 
     @Override
@@ -118,6 +122,11 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
     @Override
     public void startAutoCrafting(List<AutoCraftEntry> toCraft) {
         CraftConfirmMenu.openWithCraftingList(getActionHost(), (ServerPlayer) getPlayer(), getLocator(), toCraft);
+    }
+
+    @Override
+    public IEnergySource getEnergySource() {
+        return this.energySource;
     }
 
     @Override
