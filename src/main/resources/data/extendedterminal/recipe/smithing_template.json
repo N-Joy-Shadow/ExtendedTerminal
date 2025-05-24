@@ -1,0 +1,25 @@
+{
+  "type": "extendedcrafting:shaped_table",
+  "tier" : 2,
+  "pattern": [
+    "AAAAA",
+    "ABBBA",
+    "ABCBA",
+    "ABBBA",
+    "AABAA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:quartz_bricks"
+    },
+    "B": {
+      "item": "ae2:fluix_block"
+    },
+    "C": {
+      "item": "ae2:controller"
+    }
+  },
+  "result": {
+    "id": "ae2:fluix_upgrade_smithing_template"
+  }
+}

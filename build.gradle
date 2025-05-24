@@ -31,6 +31,10 @@ repositories {
         name = "Curios"
         url = "https://maven.theillusivec4.top/"
     }
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
 
 }
 
@@ -126,12 +130,24 @@ dependencies {
     implementation "com.blakebr0.cucumber:Cucumber:${minecraft_version}-${Cucumber_version}"
     implementation "com.blakebr0.extendedcrafting:ExtendedCrafting:${minecraft_version}-${ExtendedCrafting_version}"
 
-    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${REI_version}"
-    runtimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${REI_version}"
-
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
     runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${JEI_version}"
+    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${REI_version}"
+    compileOnly "dev.emi:emi-neoforge:${EMI_version}:api"
+    switch (project.runtime_nei) {
+        case "jei":
+            runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${JEI_version}"
+            break;
+        case "rei":
+            runtimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${REI_version}"
+            break;
+        case "emi":
+            runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${JEI_version}"
+            runtimeOnly "dev.emi:emi-neoforge:${EMI_version}"
+            break;
+    }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

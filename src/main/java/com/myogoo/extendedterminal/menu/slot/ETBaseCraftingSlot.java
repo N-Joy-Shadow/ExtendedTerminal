@@ -165,8 +165,8 @@ public class ETBaseCraftingSlot extends AppEngCraftingSlot {
         // add one of each item to the items on the board...
         var level = p.level();
         if (!level.isClientSide()) {
-            final var ic = NonNullList.withSize(9, ItemStack.EMPTY);
-            for (var x = 0; x < 9; x++) {
+            final var ic = NonNullList.withSize(menuType.getGridSize(), ItemStack.EMPTY);
+            for (var x = 0; x < menuType.getGridSize(); x++) {
                 ic.set(x, this.getPattern().getStackInSlot(x));
             }
             var recipeInput = TableCraftingInput.of(menuType.getSize()
