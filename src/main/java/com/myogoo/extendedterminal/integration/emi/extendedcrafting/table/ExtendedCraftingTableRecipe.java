@@ -18,7 +18,7 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
             ExtendedTerminal.makeId("basic_crafting_table"),
             EmiStack.of(AEParts.CRAFTING_TERMINAL));
     private final static int baseInX = 62;
-    private final static int baseInY = 0;
+    private final static int baseInY = 2;
     private final ITableRecipe recipe;
     private final ClientLevel level;
 
@@ -38,10 +38,10 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
     public void addWidgets(WidgetHolder widgets) {
         for (int i = 0; i < this.inputs.size(); i++) {
             var ingredient = this.inputs.get(i);
-            widgets.addSlot(ingredient, 8 + (i % this.getTierColNRow()) * 18, 18 + (i / this.getTierColNRow()) * 18)
-                    .drawBack(false);
-        }
-        widgets.addSlot(EmiStack.of(recipe.getResultItem(level.registryAccess())), 100, 36)
+            widgets.addSlot(ingredient, 8 + (i % this.getTierColNRow()) * 18, 2 + (i / this.getTierColNRow()) * 18)
+                .drawBack(false);
+    }
+        widgets.addSlot(EmiStack.of(recipe.getResultItem(level.registryAccess())), (8 + calcInvX(this.recipe.getTier())) - 30,2 + ((int) (double) (this.getTierColNRow() / 2)) * 18)
                 .drawBack(false);
 
         widgets.addText(Component.literal(String.format("Require Tier %d Crafting Table", this.recipe.getTier())), 80, 24, 0x7E7E7E, false);
@@ -71,6 +71,6 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
     }
 
     private static int calcInvY(int tier) {
-        return baseInY + 18 * (tier + 1);
+        return baseInY + 18 * (2 * tier + 1);
     }
 }
