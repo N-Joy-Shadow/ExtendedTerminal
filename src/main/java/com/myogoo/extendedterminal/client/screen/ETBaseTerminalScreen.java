@@ -8,7 +8,6 @@ import appeng.core.AEConfig;
 import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import appeng.menu.SlotSemantic;
-import appeng.menu.slot.CraftingTermSlot;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.myogoo.extendedterminal.menu.ETBaseTerminalMenu;
 import com.myogoo.extendedterminal.menu.slot.ETBaseCraftingSlot;
@@ -35,6 +34,7 @@ public class ETBaseTerminalScreen<T extends ETBaseTerminalMenu> extends MEStorag
         clearToPlayerInvBtn.setHalfSize(true);
         clearToPlayerInvBtn.setDisableBackground(true);
         widgets.add("clearToPlayerInv",clearToPlayerInvBtn);
+
     }
 
     @Override
@@ -54,7 +54,6 @@ public class ETBaseTerminalScreen<T extends ETBaseTerminalMenu> extends MEStorag
             } else if (InputConstants.isKeyDown(getMinecraft().getWindow().getWindow(), GLFW.GLFW_KEY_SPACE)) {
                 action = InventoryAction.CRAFT_ALL;
             } else {
-                // Craft stack on right-click, craft single on left-click
                 action = mouseButton == 1 ? InventoryAction.CRAFT_STACK : InventoryAction.CRAFT_ITEM;
             }
 
@@ -63,7 +62,6 @@ public class ETBaseTerminalScreen<T extends ETBaseTerminalMenu> extends MEStorag
 
             return;
         }
-
         super.slotClicked(slot, slotIdx, mouseButton, clickType);
     }
 
