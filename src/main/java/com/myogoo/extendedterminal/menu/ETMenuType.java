@@ -55,4 +55,15 @@ public enum ETMenuType {
         return tier;
     }
 
+    public ResourceLocation getId() {
+        return ExtendedTerminal.makeId(this.getIdAsString());
+    }
+
+    public String getIdAsString() {
+        return this.name().toLowerCase();
+    }
+
+    public String getEnglishName() {
+        return this.name().toLowerCase().replace("_", "");
+    }
 }

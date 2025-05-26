@@ -2,7 +2,9 @@ package com.myogoo.extendedterminal.integration.emi.extendedcrafting.table;
 
 import appeng.core.definitions.AEParts;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
+import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.myogoo.extendedterminal.ExtendedTerminal;
+import com.myogoo.extendedterminal.init.ETItems;
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -14,16 +16,29 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
-    public static final EmiRecipeCategory CATEGORY = new EmiRecipeCategory(
+    public static final EmiRecipeCategory BASIC_TABLE_CRAFTING_CATEGORY = new EmiRecipeCategory(
             ExtendedTerminal.makeId("basic_crafting_table"),
-            EmiStack.of(AEParts.CRAFTING_TERMINAL));
+            EmiStack.of(ModBlocks.BASIC_TABLE.get().asItem().getDefaultInstance()));
+
+    public static final EmiRecipeCategory ADVANCED_TABLE_CRAFTING_CATEGORY = new EmiRecipeCategory(
+            ExtendedTerminal.makeId("advanced_crafting_table"),
+            EmiStack.of(ModBlocks.ADVANCED_TABLE.get().asItem().getDefaultInstance()));
+
+    public static final EmiRecipeCategory ELITE_TABLE_CRAFTING_CATEGORY = new EmiRecipeCategory(
+            ExtendedTerminal.makeId("elite_crafting_table"),
+            EmiStack.of(ModBlocks.ELITE_TABLE.get().asItem().getDefaultInstance()));
+
+    public static final EmiRecipeCategory ULTIMATE_TABLE_CRAFTING_CATEGORY = new EmiRecipeCategory(
+            ExtendedTerminal.makeId("ultimate_crafting_table"),
+            EmiStack.of(ModBlocks.ULTIMATE_TABLE.get().asItem().getDefaultInstance()));
+
     private final static int baseInX = 62;
     private final static int baseInY = 2;
     private final ITableRecipe recipe;
     private final ClientLevel level;
 
-    public ExtendedCraftingTableRecipe(RecipeHolder<ITableRecipe> recipeHolder) {
-        super(CATEGORY, recipeHolder.id(), calcInvX(recipeHolder.value().getTier()), calcInvY(recipeHolder.value().getTier()));
+    public ExtendedCraftingTableRecipe(EmiRecipeCategory category,RecipeHolder<ITableRecipe> recipeHolder) {
+        super(category, recipeHolder.id(), calcInvX(recipeHolder.value().getTier()), calcInvY(recipeHolder.value().getTier()));
         this.recipe = recipeHolder.value();
         this.level = Minecraft.getInstance().level;
         for (var ingredient : this.recipe.getIngredients()) {
@@ -66,6 +81,10 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
         return -1;
     }
 
+    public int getTier() {
+        return this.recipe.getTier();
+    }
+
     private static int calcInvX(int tier) {
         return baseInX + 18 * (2 * tier + 1);
     }
@@ -73,4 +92,5 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
     private static int calcInvY(int tier) {
         return baseInY + 18 * (2 * tier + 1);
     }
+
 }

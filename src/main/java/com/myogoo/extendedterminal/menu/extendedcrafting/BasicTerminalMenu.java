@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.MenuType;
 public class BasicTerminalMenu extends ETBaseTerminalMenu  {
     public static final MenuType<BasicTerminalMenu> TYPE = MenuTypeBuilder
             .create(BasicTerminalMenu::new, ITerminalHost.class)
-            .buildUnregistered(ExtendedTerminal.makeId("basic_terminal"));
+            .buildUnregistered(ETMenuType.BASIC_TERMINAL.getId());
 
     public BasicTerminalMenu(MenuType<?> menuType, int id, Inventory ip, ITerminalHost host) {
         super(menuType, id, ip, host, ETMenuType.BASIC_TERMINAL);
