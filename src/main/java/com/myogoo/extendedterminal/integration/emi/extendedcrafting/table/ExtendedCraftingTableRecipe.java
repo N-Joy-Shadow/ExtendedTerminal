@@ -1,10 +1,9 @@
 package com.myogoo.extendedterminal.integration.emi.extendedcrafting.table;
 
-import appeng.core.definitions.AEParts;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.myogoo.extendedterminal.ExtendedTerminal;
-import com.myogoo.extendedterminal.init.ETItems;
+import com.myogoo.extendedterminal.menu.ETMenuType;
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -81,8 +80,14 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
         return -1;
     }
 
-    public int getTier() {
-        return this.recipe.getTier();
+    public static EmiRecipeCategory getCategoryFromMenuType(ETMenuType menuType) {
+        return switch (menuType) {
+            case BASIC_TERMINAL -> BASIC_TABLE_CRAFTING_CATEGORY;
+            case ADVANCED_TERMINAL -> ADVANCED_TABLE_CRAFTING_CATEGORY;
+            case ELITE_TERMINAL -> ELITE_TABLE_CRAFTING_CATEGORY;
+            case ULTIMATE_TERMINAL -> ULTIMATE_TABLE_CRAFTING_CATEGORY;
+            default -> throw new IllegalArgumentException("Invalid tier: " + menuType.getEnglishName());
+        };
     }
 
     private static int calcInvX(int tier) {
