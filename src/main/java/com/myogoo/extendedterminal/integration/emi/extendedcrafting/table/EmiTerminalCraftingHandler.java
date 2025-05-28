@@ -33,7 +33,6 @@ public class EmiTerminalCraftingHandler<T extends ETBaseTerminalMenu> implements
     public final static EmiTerminalCraftingHandler<EliteTerminalMenu> EmiEliteTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(ETMenuType.ELITE_TERMINAL);
     public final static EmiTerminalCraftingHandler<UltimateTerminalMenu> EmiUltimateTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(ETMenuType.ULTIMATE_TERMINAL);
 
-
     private final ETMenuType menuType;
     public EmiTerminalCraftingHandler(ETMenuType menuType) {
         this.menuType = menuType;
@@ -50,6 +49,7 @@ public class EmiTerminalCraftingHandler<T extends ETBaseTerminalMenu> implements
 
     @Override
     public List<ClientTooltipComponent> getTooltip(EmiRecipe recipe, EmiCraftContext<T> context) {
+
         return StandardRecipeHandler.super.getTooltip(recipe, context);
     }
 

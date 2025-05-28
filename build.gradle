@@ -17,9 +17,11 @@ repositories {
         url = "https://maven.blamejared.com/"
     }
     maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
         url = "https://modmaven.dev"
+        content {
+            includeGroup "appeng"
+            includeGroup "de.mari_023"
+        }
     }
     maven {
         url 'https://maven.blakesmods.com'
@@ -35,7 +37,6 @@ repositories {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
     }
-
 }
 
 base {
@@ -123,7 +124,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 dependencies {
     //compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${JEI_version}"
     //runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${JEI_version}"
-
     compileOnly "org.appliedenergistics:appliedenergistics2:${AE2_version}"
     runtimeOnly "org.appliedenergistics:appliedenergistics2:${AE2_version}"
 
@@ -132,6 +132,9 @@ dependencies {
 
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
     runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+
+    implementation "de.mari_023:ae2wtlib_api:${project.AE2WTLib_version}"
+    runtimeOnly "de.mari_023:ae2wtlib:${project.AE2WTLib_version}"
 
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${JEI_version}"
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${REI_version}"

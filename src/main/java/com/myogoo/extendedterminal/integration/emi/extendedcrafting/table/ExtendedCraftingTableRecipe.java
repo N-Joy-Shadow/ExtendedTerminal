@@ -1,18 +1,30 @@
 package com.myogoo.extendedterminal.integration.emi.extendedcrafting.table;
 
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.myogoo.extendedterminal.ExtendedTerminal;
 import com.myogoo.extendedterminal.menu.ETMenuType;
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
+
+import java.util.List;
 
 public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
     public static final EmiRecipeCategory BASIC_TABLE_CRAFTING_CATEGORY = new EmiRecipeCategory(
@@ -32,7 +44,6 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
             EmiStack.of(ModBlocks.ULTIMATE_TABLE.get().asItem().getDefaultInstance()));
 
     private final static int baseInX = 62;
-    private final static int baseInY = 2;
     private final ITableRecipe recipe;
     private final ClientLevel level;
 
@@ -50,15 +61,38 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        for (int i = 0; i < this.inputs.size(); i++) {
-            var ingredient = this.inputs.get(i);
-            widgets.addSlot(ingredient, 8 + (i % this.getTierColNRow()) * 18, 2 + (i / this.getTierColNRow()) * 18)
-                .drawBack(false);
-    }
-        widgets.addSlot(EmiStack.of(recipe.getResultItem(level.registryAccess())), (8 + calcInvX(this.recipe.getTier())) - 30,2 + ((int) (double) (this.getTierColNRow() / 2)) * 18)
-                .drawBack(false);
+        for (int i = 0; i < this.getGridSize(); i++) {
+            EmiIngredient ingredient;
+            if(i < this.inputs.size()) {
+                ingredient = this.inputs.get(i);
+            } else {
+                ingredient = EmiIngredient.of(Ingredient.EMPTY);
+            }
 
-        widgets.addText(Component.literal(String.format("Require Tier %d Crafting Table", this.recipe.getTier())), 80, 24, 0x7E7E7E, false);
+            int nx = (i % this.getTierColNRow()) * 18;
+            int ny = (i / this.getTierColNRow()) * 18;
+            widgets.addTexture(EmiTexture.SLOT,nx, ny);
+            widgets.addSlot(ingredient, nx, ny)
+                .drawBack(false);
+        }
+
+        if(this.recipe instanceof ShapelessTableRecipe) {
+            widgets.addTexture(EmiTexture.SHAPELESS, this.width - 18,this.height - 15);
+        }
+
+        int outputX = calcInvX(this.recipe.getTier());
+        int outputY = ((int) (double) (this.getTierColNRow() / 2)) * 18;
+
+        widgets.addTexture(EmiTexture.EMPTY_ARROW, outputX - 58, outputY);
+
+        String tooltipText = String.format("Require Tier %d Crafting Table", this.recipe.getTier());
+        var tooltip = ClientTooltipComponent.create(FormattedCharSequence.forward(tooltipText, Style.EMPTY));
+
+        widgets.addTexture(EmiTexture.LARGE_SLOT, outputX - 30, outputY - 4)
+                .tooltip(List.of(tooltip));
+        widgets.addSlot(EmiStack.of(recipe.getResultItem(level.registryAccess())),outputX - 30, outputY - 4).large(true)
+                .recipeContext(this)
+                .drawBack(false);
     }
 
     private int getTierColNRow() {
@@ -80,6 +114,25 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
         return -1;
     }
 
+    private int getGridSize() {
+        int tier = this.recipe.getTier();
+        switch (tier) {
+            case 1 -> {
+                return 3 * 3;
+            }
+            case 2 -> {
+                return 5 * 5;
+            }
+            case 3 -> {
+                return 7 * 7;
+            }
+            case 4 -> {
+                return 9 * 9;
+            }
+        }
+        return -1;
+    }
+
     public static EmiRecipeCategory getCategoryFromMenuType(ETMenuType menuType) {
         return switch (menuType) {
             case BASIC_TERMINAL -> BASIC_TABLE_CRAFTING_CATEGORY;
@@ -95,7 +148,7 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
     }
 
     private static int calcInvY(int tier) {
-        return baseInY + 18 * (2 * tier + 1);
+        return 18 * (2 * tier + 1);
     }
 
 }
