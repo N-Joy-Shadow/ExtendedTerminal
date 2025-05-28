@@ -12,6 +12,9 @@ import com.myogoo.extendedterminal.menu.ETMenuType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 public class ETBaseTerminalPart extends AbstractTerminalPart {
 
@@ -24,13 +27,19 @@ public class ETBaseTerminalPart extends AbstractTerminalPart {
 
     public static final IPartModel MODEL = new PartModel(MODEL_BASE, MODEL_ON, MODEL_STATUS_ON);
 
-    private AppEngInternalInventory craftingGrid;
+    private final AppEngInternalInventory craftingGrid;
     private final ETMenuType etMenuType;
 
     public ETBaseTerminalPart(IPartItem<?> partItem, ETMenuType etMenuType) {
         super(partItem);
         this.etMenuType = etMenuType;
         this.craftingGrid = new AppEngInternalInventory(this, etMenuType.getGridSize());
+    }
+
+    @Override
+    public void clearContent() {
+        super.clearContent();
+        craftingGrid.clear();
     }
 
     @Override
@@ -56,6 +65,16 @@ public class ETBaseTerminalPart extends AbstractTerminalPart {
     public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
         super.writeToNBT(data, registries);
         this.craftingGrid.writeToNBT(data, "craftingGrid", registries);
+    }
+
+    @Override
+    public void addAdditionalDrops(List<ItemStack> drops, boolean wrenched) {
+         super.addAdditionalDrops(drops, wrenched);
+        for(var is : this.craftingGrid) {
+            if(!is.isEmpty()) {
+                drops.add(is);
+            }
+        }
     }
 
 }
