@@ -8,6 +8,7 @@ import appeng.items.parts.PartModels;
 import appeng.parts.PartModel;
 import appeng.parts.reporting.AbstractTerminalPart;
 import appeng.util.inv.AppEngInternalInventory;
+import com.myogoo.extendedterminal.ExtendedTerminal;
 import com.myogoo.extendedterminal.menu.ETMenuType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -19,13 +20,12 @@ import java.util.List;
 public class ETBaseTerminalPart extends AbstractTerminalPart {
 
     @PartModels
-    private static final ResourceLocation MODEL_ON = AppEng.makeId("part/crafting_terminal_off");
+    private static final ResourceLocation MODEL_ON = ExtendedTerminal.makeId("part/extended_terminal_on");
     @PartModels
-    protected static final ResourceLocation MODEL_BASE = AppEng.makeId("part/display_base");
-    @PartModels
-    protected static final ResourceLocation MODEL_STATUS_ON = AppEng.makeId("part/display_status_on");
+    private static final ResourceLocation MODEL_OFF = ExtendedTerminal.makeId("part/extended_terminal_off");
 
-    public static final IPartModel MODEL = new PartModel(MODEL_BASE, MODEL_ON, MODEL_STATUS_ON);
+    public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, MODEL_ON, MODEL_STATUS_ON);
+    public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, MODEL_OFF, MODEL_STATUS_ON);
 
     private final AppEngInternalInventory craftingGrid;
     private final ETMenuType etMenuType;
@@ -44,7 +44,7 @@ public class ETBaseTerminalPart extends AbstractTerminalPart {
 
     @Override
     public IPartModel getStaticModels() {
-        return MODEL;
+        return this.selectModel(MODELS_OFF,MODELS_ON,MODELS_ON);
     }
 
     @Override

@@ -40,7 +40,7 @@ public enum ETMenuType {
     }
 
     public ResourceLocation getCraftingInventory() {
-        return ExtendedTerminal.makeId(this.name().toLowerCase() + "_inventory");
+        return ExtendedTerminal.makeId(this.getIdAsString() + "_inventory");
     }
 
     public SlotSemantic getSlotSemanticGrid() {

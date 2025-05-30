@@ -15,7 +15,8 @@ public class ETCreativeTab {
     public static final DeferredRegister<CreativeModeTab> REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ExtendedTerminal.MODID);
 
     static {
-        REGISTER.register("extended_terminal_creative_tab",() -> CreativeModeTab.builder()
+        REGISTER.register("itemgroup.extendedcrafting",() -> CreativeModeTab.builder()
+                .title(Component.translatable("itemgroup.extendedcrafting.title"))
                 .icon(AEParts.CRAFTING_TERMINAL::stack)
                 .displayItems((params, output) -> {
                     for (ItemDefinition<?> item : ETItems.ITEMS) {

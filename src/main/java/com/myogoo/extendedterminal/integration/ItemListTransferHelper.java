@@ -7,3 +7,4 @@ import net.minecraft.world.item.crafting.Recipe;
 
 public interface ItemListTransferHelper {
 }
+
