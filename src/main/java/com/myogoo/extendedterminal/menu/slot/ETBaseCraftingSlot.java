@@ -29,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.CommonHooks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -269,12 +270,44 @@ public class ETBaseCraftingSlot extends AppEngCraftingSlot {
     //?
     private boolean preCraft(Player p, MEStorage inv, ItemStack[] set,
                              ItemStack result) {
-
         return true;
     }
 
-    private void makeItem(Player p, ItemStack is) {
-        super.onTake(p, is);
+    private void makeItem(Player player, ItemStack stack) {
+        //this.amountCrafted += stack.getCount();
+        this.checkTakeAchievements(stack);
+
+        var items = NonNullList.withSize(this.craftInv.size(), ItemStack.EMPTY);
+        for(int i = 0; i < this.craftInv.size(); i++) {
+            items.set(i, this.craftInv.getStackInSlot(i));
+        }
+        TableCraftingInput positioned = TableCraftingInput.of(
+                this.menuType.getSize(), this.menuType.getSize(), items, this.menuType.getTier());
+
+        CommonHooks.setCraftingPlayer(player);
+        var remainingItems = this.getRemainingItems(positioned,player.level());
+        CommonHooks.setCraftingPlayer(null);
+
+        for(int y = 0; y < menuType.getSize(); y++) {
+            for(int x = 0; x < menuType.getSize(); x++) {
+                var slotIdx = y * menuType.getSize() + x;
+                var remainderIdx = (y - positioned.top()) * 3 + (x - positioned.left());
+
+                // Consumes the item from the grid
+                this.craftInv.extractItem(slotIdx, 1, false);
+
+                if (remainderIdx >= 0 && remainderIdx < remainingItems.size()) {
+                    var remainingInSlot = remainingItems.get(remainderIdx);
+                    if (!remainingInSlot.isEmpty()) {
+                        if (this.craftInv.getStackInSlot(slotIdx).isEmpty()) {
+                            this.craftInv.setItemDirect(slotIdx, remainingInSlot);
+                        } else if (!player.getInventory().add(remainingInSlot)) {
+                            player.drop(remainingInSlot, false);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void postCraft(Player p, MEStorage inv, ItemStack[] set,
@@ -300,14 +333,21 @@ public class ETBaseCraftingSlot extends AppEngCraftingSlot {
             }
         }
 
-        if (drops.size() > 0) {
+        if (!drops.isEmpty()) {
             Platform.spawnDrops(p.level(), new BlockPos((int) p.getX(), (int) p.getY(), (int) p.getZ()), drops);
         }
     }
 
-    InternalInventory getPattern() {
+    private InternalInventory getPattern() {
         return this.pattern;
     }
+
+    protected NonNullList<ItemStack> getRemainingItems(TableCraftingInput ic, Level level) {
+        return level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), ic, level)
+                .map(recipe -> recipe.value().getRemainingItems(ic))
+                .orElse(NonNullList.withSize(this.menuType.getGridSize(), ItemStack.EMPTY));
+    }
+
 
 
 }
