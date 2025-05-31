@@ -41,9 +41,7 @@ public class ETItems {
     }
 
     private static <T extends IPart>ItemDefinition<PartItem<T>> createETPart(ETMenuType etMenuType, Class<T> partClass, Function<IPartItem<T>, T> partFactory) {
-        String id = etMenuType.getIdAsString();
-        String name = etMenuType.getEnglishName();
-        return createPart(name, id, partClass, partFactory);
+        return createPart(etMenuType.getEnglishName(), etMenuType.getIdAsString(), partClass, partFactory);
     }
 
 }

@@ -3,13 +3,23 @@
     "../terminals/terminal.json"
   ],
   "slots": {
-    "ADVANCED_CRAFTING_GRID": {
-      "left": 26,
-      "bottom": 158
+    "ELITE_CRAFTING_GRID": {
+      "left": 9,
+      "bottom": 224
     },
-    "ADVANCED_CRAFTING_RESULT": {
-      "left": 134,
-      "bottom": 140
+    "ELITE_CRAFTING_RESULT": {
+      "left": 172,
+      "bottom": 171
+    },
+    "PLAYER_INVENTORY": {
+      "left": 20,
+      "bottom": 82,
+      "grid": "BREAK_AFTER_9COLS"
+    },
+    "PLAYER_HOTBAR": {
+      "left": 20,
+      "bottom": 24,
+      "grid": "HORIZONTAL"
     }
   },
   "text": {
@@ -28,13 +38,15 @@
       },
       "position": {
         "left": 8,
-        "bottom": 177
+        "bottom": 236
       }
     }
   },
   "terminalStyle": {
     "header": {
-      "texture": "guis/crafting.png",
+      "texture": "guis/elite_terminal.png",
+      "textureWidth": 512,
+      "textureHeight": 512,
       "srcRect": [
         0,
         0,
@@ -43,7 +55,9 @@
       ]
     },
     "firstRow": {
-      "texture": "guis/crafting.png",
+      "texture": "guis/elite_terminal.png",
+      "textureWidth": 512,
+      "textureHeight": 512,
       "srcRect": [
         0,
         17,
@@ -52,7 +66,9 @@
       ]
     },
     "row": {
-      "texture": "guis/crafting.png",
+      "texture": "guis/elite_terminal.png",
+      "textureWidth": 512,
+      "textureHeight": 512,
       "srcRect": [
         0,
         35,
@@ -61,7 +77,9 @@
       ]
     },
     "lastRow": {
-      "texture": "guis/crafting.png",
+      "texture": "guis/elite_terminal.png",
+      "textureWidth": 512,
+      "textureHeight": 512,
       "srcRect": [
         0,
         53,
@@ -70,23 +88,25 @@
       ]
     },
     "bottom": {
-      "texture": "guis/crafting.png",
+      "texture": "guis/elite_terminal.png",
+      "textureWidth": 512,
+      "textureHeight": 512,
       "srcRect": [
         0,
         71,
-        195,
-        180
+        200,
+        239
       ]
     }
   },
   "widgets": {
     "clearCraftingGrid": {
-      "left": 81,
-      "bottom": 159
+      "left": 137,
+      "bottom": 225
     },
     "clearToPlayerInv": {
-      "left": 91,
-      "bottom": 159
+      "left": 147,
+      "bottom": 225
     }
   }
 }

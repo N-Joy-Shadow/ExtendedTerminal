@@ -1,14 +1,11 @@
 package com.myogoo.extendedterminal.client;
 
-import appeng.api.util.AEColor;
-import appeng.client.render.StaticItemColor;
 import appeng.init.client.InitScreens;
 import com.myogoo.extendedterminal.ExtendedTerminal;
 import com.myogoo.extendedterminal.client.screen.extendedcrafting.AdvancedTerminalScreen;
 import com.myogoo.extendedterminal.client.screen.extendedcrafting.BasicTerminalScreen;
 import com.myogoo.extendedterminal.client.screen.extendedcrafting.EliteTerminalScreen;
 import com.myogoo.extendedterminal.client.screen.extendedcrafting.UltimateTerminalScreen;
-import com.myogoo.extendedterminal.init.ETItems;
 import com.myogoo.extendedterminal.menu.extendedcrafting.AdvancedTerminalMenu;
 import com.myogoo.extendedterminal.menu.extendedcrafting.BasicTerminalMenu;
 import com.myogoo.extendedterminal.menu.extendedcrafting.EliteTerminalMenu;
@@ -16,9 +13,7 @@ import com.myogoo.extendedterminal.menu.extendedcrafting.UltimateTerminalMenu;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.ScreenEvent;
 
 @Mod(value = ExtendedTerminal.MODID, dist = Dist.CLIENT)
 public class ETClient {

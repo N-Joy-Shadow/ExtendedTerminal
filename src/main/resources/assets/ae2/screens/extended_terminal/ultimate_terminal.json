@@ -3,13 +3,23 @@
     "../terminals/terminal.json"
   ],
   "slots": {
-    "BASIC_CRAFTING_GRID": {
-      "left": 26,
-      "bottom": 158
+    "ULTIMATE_CRAFTING_GRID": {
+      "left": 9,
+      "bottom": 261
     },
-    "BASIC_CRAFTING_RESULT": {
-      "left": 134,
-      "bottom": 140
+    "ULTIMATE_CRAFTING_RESULT": {
+      "left": 206,
+      "bottom": 190
+    },
+    "PLAYER_INVENTORY": {
+      "left": 39,
+      "bottom": 83,
+      "grid": "BREAK_AFTER_9COLS"
+    },
+    "PLAYER_HOTBAR": {
+      "left": 39,
+      "bottom": 25,
+      "grid": "HORIZONTAL"
     }
   },
   "text": {
@@ -28,13 +38,15 @@
       },
       "position": {
         "left": 8,
-        "bottom": 177
+        "bottom": 273
       }
     }
   },
   "terminalStyle": {
     "header": {
-      "texture": "guis/crafting.png",
+      "texture": "guis/ultimate_terminal.png",
+      "textureWidth": 512,
+      "textureHeight": 512,
       "srcRect": [
         0,
         0,
@@ -43,7 +55,9 @@
       ]
     },
     "firstRow": {
-      "texture": "guis/crafting.png",
+      "texture": "guis/ultimate_terminal.png",
+      "textureWidth": 512,
+      "textureHeight": 512,
       "srcRect": [
         0,
         17,
@@ -52,7 +66,9 @@
       ]
     },
     "row": {
-      "texture": "guis/crafting.png",
+      "texture": "guis/ultimate_terminal.png",
+      "textureWidth": 512,
+      "textureHeight": 512,
       "srcRect": [
         0,
         35,
@@ -61,7 +77,9 @@
       ]
     },
     "lastRow": {
-      "texture": "guis/crafting.png",
+      "texture": "guis/ultimate_terminal.png",
+      "textureWidth": 512,
+      "textureHeight": 512,
       "srcRect": [
         0,
         53,
@@ -70,23 +88,25 @@
       ]
     },
     "bottom": {
-      "texture": "guis/crafting.png",
+        "texture": "guis/ultimate_terminal.png",
+      "textureWidth": 512,
+      "textureHeight": 512,
       "srcRect": [
         0,
         71,
-        195,
-        180
+        235,
+        275
       ]
     }
   },
   "widgets": {
     "clearCraftingGrid": {
-      "left": 81,
-      "bottom": 159
+      "left": 174,
+      "bottom": 262
     },
     "clearToPlayerInv": {
-      "left": 91,
-      "bottom": 159
+      "left": 184,
+      "bottom": 262
     }
   }
 }
