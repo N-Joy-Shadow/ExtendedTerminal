@@ -10,6 +10,11 @@
     "BASIC_CRAFTING_RESULT": {
       "left": 134,
       "bottom": 140
+    },
+    "PLAYER_ARMOR": {
+      "left": -16,
+      "bottom": 82,
+      "grid": "VERTICAL"
     }
   },
   "text": {

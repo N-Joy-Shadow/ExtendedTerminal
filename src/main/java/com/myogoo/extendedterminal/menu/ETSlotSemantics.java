@@ -4,6 +4,9 @@ import appeng.menu.SlotSemantic;
 import appeng.menu.SlotSemantics;
 
 public final class ETSlotSemantics {
+    public static final SlotSemantic PLAYER_ARMOR = SlotSemantics.register("PLAYER_ARMOR", true, 1500);
+    public static final SlotSemantic PLAYER_CURIOS = SlotSemantics.register("PLAYER_CURIOS", true, -1);
+
     public static final SlotSemantic BASIC_CRAFTING_GRID = SlotSemantics.register("BASIC_CRAFTING_GRID", true);
     public static final SlotSemantic BASIC_CRAFTING_RESULT = SlotSemantics.register("BASIC_CRAFTING_RESULT", false);
 

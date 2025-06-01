@@ -2,7 +2,6 @@ package com.myogoo.extendedterminal.menu.extendedcrafting;
 
 import appeng.api.storage.ITerminalHost;
 import appeng.menu.implementations.MenuTypeBuilder;
-import com.myogoo.extendedterminal.ExtendedTerminal;
 import com.myogoo.extendedterminal.menu.ETBaseTerminalMenu;
 import com.myogoo.extendedterminal.menu.ETMenuType;
 import net.minecraft.world.entity.player.Inventory;

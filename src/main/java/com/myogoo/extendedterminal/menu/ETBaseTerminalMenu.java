@@ -11,18 +11,24 @@ import appeng.helpers.InventoryAction;
 import appeng.me.storage.LinkStatusRespectingInventory;
 import appeng.menu.me.common.MEStorageMenu;
 import appeng.menu.me.crafting.CraftConfirmMenu;
+import appeng.menu.me.items.CraftingTermMenu;
+import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.CraftingMatrixSlot;
+import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.PlayerInternalInventory;
 import com.blakebr0.extendedcrafting.api.TableCraftingInput;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.google.common.base.Preconditions;
+import com.myogoo.extendedterminal.menu.slot.ETArmorSlot;
 import com.myogoo.extendedterminal.menu.slot.ETBaseCraftingSlot;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -35,6 +41,7 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
     private final ETBaseCraftingSlot outputSlot;
     private final ISegmentedInventory craftingInventoryHost;
     private final CraftingMatrixSlot[] craftingSlots;
+    private final ETArmorSlot[] armorSlots = new ETArmorSlot[4];
     private final ETMenuType etMenuType;
     @Nullable
     private TableCraftingInput lastTestedInput;
@@ -61,6 +68,25 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
         updateCurrentRecipeAndOutput(true);
 
         registerClientAction(ACTION_CLEAR_TO_PLAYER, this::clearToPlayerInventory);
+
+        var armorInventory = new AppEngInternalInventory(4);
+
+        for(int i = 0; i < Inventory.ALL_ARMOR_SLOTS.length; i++) {
+            this.addSlot(this.armorSlots[i] = new ETArmorSlot(armorInventory,Inventory.ALL_ARMOR_SLOTS[i]), ETSlotSemantics.PLAYER_ARMOR);
+        }
+
+        for(int i = 0; i < Inventory.ALL_ARMOR_SLOTS.length; i++) {
+            var armor = this.getPlayerInventory().getArmor(i);
+            this.armorSlots[i].set(armor);
+        }
+    }
+
+    @Override
+    public void onSlotChange(Slot slot) {
+        if(slot instanceof ETArmorSlot armorSlot) {
+            this.getPlayerInventory().armor.set(armorSlot.getSlotIndex(), armorSlot.getItem().copy());
+        }
+        super.onSlotChange(slot);
     }
 
     public void clearCraftingGrid() {
@@ -113,7 +139,6 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
         return super.hasIngredient(ingredient, reservedAmounts);
     }
 
-
     @Override
     public InternalInventory getCraftingMatrix() {
         return this.craftingInventoryHost.getSubInventory(etMenuType.getCraftingInventory());
@@ -163,6 +188,68 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
 
         return false;
     }
+
+    public CraftingTermMenu.MissingIngredientSlots findMissingIngredients(Map<Integer, Ingredient> ingredients) {
+
+        // Try to figure out if any slots have missing ingredients
+        // Find every "slot" (in JEI parlance) that has no equivalent item in the item repo or player inventory
+        Set<Integer> missingSlots = new HashSet<>(); // missing but not craftable
+        Set<Integer> craftableSlots = new HashSet<>(); // missing but craftable
+
+        // We need to track how many of a given item stack we've already used for other slots in the recipe.
+        // Otherwise recipes that need 4x<item> will not correctly show missing items if at least 1 of <item> is in
+        // the grid.
+        var reservedGridAmounts = new Object2IntOpenHashMap<>();
+        var playerItems = getPlayerInventory().items;
+        var reservedPlayerItems = new int[playerItems.size()];
+
+        for (var entry : ingredients.entrySet()) {
+            var ingredient = entry.getValue();
+
+            boolean found = false;
+            // Player inventory is cheaper to check
+            for (int i = 0; i < playerItems.size(); i++) {
+                // Do not consider locked slots
+                if (isPlayerInventorySlotLocked(i)) {
+                    continue;
+                }
+
+                var stack = playerItems.get(i);
+                if (stack.getCount() - reservedPlayerItems[i] > 0 && ingredient.test(stack)) {
+                    reservedPlayerItems[i]++;
+                    found = true;
+                    break;
+                }
+            }
+
+            // Then check the terminal screen's repository of network items
+            if (!found) {
+                // We use AE stacks to get an easily comparable item type key that ignores stack size
+                if (hasIngredient(ingredient, reservedGridAmounts)) {
+                    reservedGridAmounts.merge(ingredient, 1, Integer::sum);
+                    found = true;
+                }
+            }
+
+            // Check the terminal once again, but this time for craftable items
+            if (!found) {
+                for (var stack : ingredient.getItems()) {
+                    if (isCraftable(stack)) {
+                        craftableSlots.add(entry.getKey());
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!found) {
+                missingSlots.add(entry.getKey());
+            }
+        }
+
+        return new CraftingTermMenu.MissingIngredientSlots(missingSlots, craftableSlots);
+    }
+
 
     public void clearToPlayerInventory() {
         if (isClientSide()) {

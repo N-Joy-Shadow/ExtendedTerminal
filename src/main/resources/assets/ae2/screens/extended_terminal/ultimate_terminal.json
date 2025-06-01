@@ -20,6 +20,11 @@
       "left": 39,
       "bottom": 25,
       "grid": "HORIZONTAL"
+    },
+    "PLAYER_ARMOR": {
+      "left": -16,
+      "bottom": 82,
+      "grid": "VERTICAL"
     }
   },
   "text": {
@@ -88,7 +93,7 @@
       ]
     },
     "bottom": {
-        "texture": "guis/ultimate_terminal.png",
+      "texture": "guis/ultimate_terminal.png",
       "textureWidth": 512,
       "textureHeight": 512,
       "srcRect": [

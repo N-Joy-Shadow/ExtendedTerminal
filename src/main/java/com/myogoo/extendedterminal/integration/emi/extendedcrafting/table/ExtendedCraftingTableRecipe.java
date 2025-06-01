@@ -12,17 +12,12 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
 
 import java.util.List;
 
@@ -76,14 +71,16 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
                 .drawBack(false);
         }
 
-        if(this.recipe instanceof ShapelessTableRecipe) {
-            widgets.addTexture(EmiTexture.SHAPELESS, this.width - 18,this.height - 15);
-        }
+
 
         int outputX = calcInvX(this.recipe.getTier());
         int outputY = ((int) (double) (this.getTierColNRow() / 2)) * 18;
 
-        widgets.addTexture(EmiTexture.EMPTY_ARROW, outputX - 58, outputY);
+        if(this.recipe instanceof ShapelessTableRecipe) {
+            widgets.addTexture(EmiTexture.SHAPELESS, outputX - 25,outputY - 4 - 14);
+        }
+
+        widgets.addTexture(EmiTexture.EMPTY_ARROW, outputX - 58, outputY - 4);
 
         String tooltipText = String.format("Require Tier %d Crafting Table", this.recipe.getTier());
         var tooltip = ClientTooltipComponent.create(FormattedCharSequence.forward(tooltipText, Style.EMPTY));

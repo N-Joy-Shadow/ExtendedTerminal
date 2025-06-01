@@ -10,8 +10,10 @@ import appeng.helpers.InventoryAction;
 import appeng.menu.SlotSemantic;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.myogoo.extendedterminal.menu.ETBaseTerminalMenu;
+import com.myogoo.extendedterminal.menu.slot.ETArmorSlot;
 import com.myogoo.extendedterminal.menu.slot.ETBaseCraftingSlot;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -62,6 +64,12 @@ public class ETBaseTerminalScreen<T extends ETBaseTerminalMenu> extends MEStorag
 
             return;
         }
+        if(slot instanceof ETArmorSlot armorSlot) {
+            var selectedArmor = armorSlot.getItem().copy();
+            armorSlot.clearStack();
+        }
+
+
         super.slotClicked(slot, slotIdx, mouseButton, clickType);
     }
 

@@ -20,8 +20,13 @@
       "left": 20,
       "bottom": 24,
       "grid": "HORIZONTAL"
+    },
+    "PLAYER_ARMOR" : {
+      "left" : -16,
+      "bottom" : 82,
+      "grid": "VERTICAL"
     }
-  },
+},
   "text": {
     "dialog_title": {
       "text": {
