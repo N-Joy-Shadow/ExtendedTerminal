@@ -4,21 +4,21 @@
   ],
   "slots": {
     "ELITE_CRAFTING_GRID": {
-      "left": 9,
-      "bottom": 224
+      "left": 13,
+      "bottom": 230
     },
     "ELITE_CRAFTING_RESULT": {
-      "left": 172,
-      "bottom": 171
+      "left": 147,
+      "bottom": 176
     },
     "PLAYER_INVENTORY": {
-      "left": 20,
-      "bottom": 82,
+      "left": 8,
+      "bottom": 84,
       "grid": "BREAK_AFTER_9COLS"
     },
     "PLAYER_HOTBAR": {
-      "left": 20,
-      "bottom": 24,
+      "left": 8,
+      "bottom": 26,
       "grid": "HORIZONTAL"
     },
     "PLAYER_ARMOR" : {
@@ -43,7 +43,7 @@
       },
       "position": {
         "left": 8,
-        "bottom": 236
+        "bottom": 248
       }
     }
   },
@@ -100,7 +100,7 @@
         0,
         71,
         200,
-        239
+        252
       ]
     }
   },
