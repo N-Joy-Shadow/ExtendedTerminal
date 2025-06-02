@@ -9,7 +9,7 @@
     },
     "ELITE_CRAFTING_RESULT": {
       "left": 147,
-      "bottom": 176
+      "bottom": 173
     },
     "PLAYER_INVENTORY": {
       "left": 8,
@@ -106,12 +106,12 @@
   },
   "widgets": {
     "clearCraftingGrid": {
-      "left": 137,
-      "bottom": 225
+      "left": 140,
+      "bottom": 231
     },
     "clearToPlayerInv": {
-      "left": 147,
-      "bottom": 225
+      "left": 150,
+      "bottom": 231
     }
   }
 }

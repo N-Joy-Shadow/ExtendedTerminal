@@ -4,21 +4,21 @@
   ],
   "slots": {
     "ULTIMATE_CRAFTING_GRID": {
-      "left": 9,
-      "bottom": 261
+      "left": 8,
+      "bottom": 292
     },
     "ULTIMATE_CRAFTING_RESULT": {
-      "left": 206,
-      "bottom": 190
+      "left": 80,
+      "bottom": 123
     },
     "PLAYER_INVENTORY": {
-      "left": 39,
-      "bottom": 83,
+      "left": 8,
+      "bottom": 84,
       "grid": "BREAK_AFTER_9COLS"
     },
     "PLAYER_HOTBAR": {
-      "left": 39,
-      "bottom": 25,
+      "left": 8,
+      "bottom": 26,
       "grid": "HORIZONTAL"
     },
     "PLAYER_ARMOR": {
@@ -43,7 +43,7 @@
       },
       "position": {
         "left": 8,
-        "bottom": 273
+        "bottom": 304
       }
     }
   },
@@ -100,18 +100,18 @@
         0,
         71,
         235,
-        275
+        308
       ]
     }
   },
   "widgets": {
     "clearCraftingGrid": {
-      "left": 174,
-      "bottom": 262
+      "left": 149,
+      "bottom": 129
     },
     "clearToPlayerInv": {
-      "left": 184,
-      "bottom": 262
+      "left": 159,
+      "bottom": 129
     }
   }
 }
