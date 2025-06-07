@@ -22,6 +22,7 @@ import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.myogoo.extendedterminal.menu.ETBaseTerminalMenu;
 import com.myogoo.extendedterminal.menu.ETMenuType;
+import com.myogoo.extendedterminal.menu.extendedcrafting.ExtendedTerminalBaseMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Inventory;
@@ -140,7 +141,7 @@ public class ETBaseCraftingSlot extends AppEngCraftingSlot {
     }
 
     protected RecipeHolder<ITableRecipe> findRecipe(TableCraftingInput ic, Level level) {
-        if (this.menu instanceof ETBaseTerminalMenu terminalMenu) {
+        if (this.menu instanceof ExtendedTerminalBaseMenu terminalMenu) {
             var recipe = terminalMenu.getCurrentRecipe();
 
             if (recipe != null && recipe.value().matches(ic, level)) {
@@ -150,6 +151,18 @@ public class ETBaseCraftingSlot extends AppEngCraftingSlot {
 
         return level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), ic, level).orElse(null);
     }
+
+        protected NonNullList<ItemStack> getRemainingItems(TableCraftingInput ic, Level level) {
+            if (this.menu instanceof ExtendedTerminalBaseMenu terminalMenu) {
+                var recipe = terminalMenu.getCurrentRecipe();
+
+                if (recipe != null && recipe.value().matches(ic, level)) {
+                    return terminalMenu.getCurrentRecipe().value().getRemainingItems(ic);
+                }
+            }
+
+            return super.getRemainingItems(ic, level);
+        }
 
     private ItemStack craftItem(Player p, MEStorage inv, KeyCounter all) {
         // update crafting matrix...
@@ -342,12 +355,6 @@ public class ETBaseCraftingSlot extends AppEngCraftingSlot {
         return this.pattern;
     }
 
-    protected NonNullList<ItemStack> getRemainingItems(TableCraftingInput ic, Level level) {
-        return level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), ic, level)
-                .map(recipe -> recipe.value().getRemainingItems(ic))
-                .orElse(NonNullList.withSize(this.menuType.getGridSize(), ItemStack.EMPTY));
-    }
-
-
 
 }
+

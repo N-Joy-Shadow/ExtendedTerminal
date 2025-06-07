@@ -5,6 +5,7 @@ import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.myogoo.extendedterminal.ExtendedTerminal;
 import com.myogoo.extendedterminal.menu.ETMenuType;
+import com.myogoo.extendedterminal.menu.extendedcrafting.*;
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
@@ -138,6 +139,21 @@ public class ExtendedCraftingTableRecipe extends BasicEmiRecipe {
             case ULTIMATE_TERMINAL -> ULTIMATE_TABLE_CRAFTING_CATEGORY;
             default -> throw new IllegalArgumentException("Invalid tier: " + menuType.getEnglishName());
         };
+    }
+
+    public static EmiRecipeCategory getCategoryFromClass(Class<?> clazz) {
+        if (BasicTerminalMenu.class.equals(clazz)) {
+            return BASIC_TABLE_CRAFTING_CATEGORY;
+        } else if (AdvancedTerminalMenu.class.equals(clazz)) {
+            return ADVANCED_TABLE_CRAFTING_CATEGORY;
+        } else if (EliteTerminalMenu.class.equals(clazz)) {
+            return ELITE_TABLE_CRAFTING_CATEGORY;
+        } else if (UltimateTerminalMenu.class.equals(clazz)) {
+            return ULTIMATE_TABLE_CRAFTING_CATEGORY;
+        } else {
+            throw new IllegalArgumentException("Invalid class: " + clazz.getSimpleName());
+        }
+
     }
 
     private static int calcInvX(int tier) {

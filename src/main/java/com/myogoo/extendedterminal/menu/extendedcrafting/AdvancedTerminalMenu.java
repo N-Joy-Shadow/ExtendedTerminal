@@ -8,7 +8,7 @@ import com.myogoo.extendedterminal.menu.ETMenuType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 
-public class AdvancedTerminalMenu extends ETBaseTerminalMenu {
+public class AdvancedTerminalMenu extends ExtendedTerminalBaseMenu {
     public static final MenuType<AdvancedTerminalMenu> TYPE = MenuTypeBuilder
             .create(AdvancedTerminalMenu::new, ITerminalHost.class)
             .buildUnregistered(ETMenuType.ADVANCED_TERMINAL.getId());

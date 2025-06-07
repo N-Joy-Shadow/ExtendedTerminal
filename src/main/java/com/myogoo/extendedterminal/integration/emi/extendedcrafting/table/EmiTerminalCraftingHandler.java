@@ -1,40 +1,31 @@
 package com.myogoo.extendedterminal.integration.emi.extendedcrafting.table;
 
-import appeng.api.stacks.GenericStack;
-import appeng.core.AEConfig;
-import appeng.integration.modules.emi.EmiStackHelper;
-import appeng.menu.SlotSemantics;
-import appeng.menu.me.common.MEStorageMenu;
-import com.myogoo.extendedterminal.menu.ETBaseTerminalMenu;
+import appeng.core.localization.ItemModText;
+import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
+import com.myogoo.extendedterminal.integration.ItemListTermCraftingHelper;
 import com.myogoo.extendedterminal.menu.ETMenuType;
-import com.myogoo.extendedterminal.menu.extendedcrafting.AdvancedTerminalMenu;
-import com.myogoo.extendedterminal.menu.extendedcrafting.BasicTerminalMenu;
-import com.myogoo.extendedterminal.menu.extendedcrafting.EliteTerminalMenu;
-import com.myogoo.extendedterminal.menu.extendedcrafting.UltimateTerminalMenu;
-import dev.emi.emi.api.recipe.EmiPlayerInventory;
+import com.myogoo.extendedterminal.menu.extendedcrafting.*;
+import com.myogoo.extendedterminal.util.ETCraftingRecipeHelper;
+import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.recipe.handler.EmiCraftContext;
-import dev.emi.emi.api.recipe.handler.StandardRecipeHandler;
 import dev.emi.emi.api.stack.EmiStack;
-import dev.emi.emi.api.widget.Widget;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class EmiTerminalCraftingHandler<T extends ETBaseTerminalMenu> implements StandardRecipeHandler<T> {
-    public final static EmiTerminalCraftingHandler<BasicTerminalMenu> EmiBasicTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(ETMenuType.BASIC_TERMINAL);
-    public final static EmiTerminalCraftingHandler<AdvancedTerminalMenu> EmiAdvancedTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(ETMenuType.ADVANCED_TERMINAL);
-    public final static EmiTerminalCraftingHandler<EliteTerminalMenu> EmiEliteTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(ETMenuType.ELITE_TERMINAL);
-    public final static EmiTerminalCraftingHandler<UltimateTerminalMenu> EmiUltimateTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(ETMenuType.ULTIMATE_TERMINAL);
+public class EmiTerminalCraftingHandler<T extends ExtendedTerminalBaseMenu> extends AbstractTableRecipeHandler<T> {
+    public final static EmiTerminalCraftingHandler<BasicTerminalMenu> EmiBasicTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(BasicTerminalMenu.class,ETMenuType.BASIC_TERMINAL);
+    public final static EmiTerminalCraftingHandler<AdvancedTerminalMenu> EmiAdvancedTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(AdvancedTerminalMenu.class,ETMenuType.ADVANCED_TERMINAL);
+    public final static EmiTerminalCraftingHandler<EliteTerminalMenu> EmiEliteTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(EliteTerminalMenu.class,ETMenuType.ELITE_TERMINAL);
+    public final static EmiTerminalCraftingHandler<UltimateTerminalMenu> EmiUltimateTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(UltimateTerminalMenu.class, ETMenuType.ULTIMATE_TERMINAL);
 
     private final ETMenuType menuType;
-    public EmiTerminalCraftingHandler(ETMenuType menuType) {
+    public EmiTerminalCraftingHandler(Class<T> containerClass,ETMenuType menuType) {
+        super(containerClass);
         this.menuType = menuType;
     }
     @Override
@@ -42,87 +33,84 @@ public class EmiTerminalCraftingHandler<T extends ETBaseTerminalMenu> implements
         return recipe.getCategory().equals(ExtendedCraftingTableRecipe.getCategoryFromMenuType(this.menuType));
     }
 
-    @Override
-    public boolean alwaysDisplaySupport(EmiRecipe recipe) {
-        return StandardRecipeHandler.super.alwaysDisplaySupport(recipe);
-    }
 
     @Override
-    public List<ClientTooltipComponent> getTooltip(EmiRecipe recipe, EmiCraftContext<T> context) {
+    protected Result transferRecipe(T menu, @Nullable RecipeHolder<?> holder, EmiRecipe emiRecipe, boolean doTransfer) {
+        var recipeId = holder != null ? holder.id() : null;
+        var recipe = holder != null ? holder.value() : null;
 
-        return StandardRecipeHandler.super.getTooltip(recipe, context);
-    }
-
-    @Override
-    public List<Slot> getInputSources(T menu) {
-        var slots = new ArrayList<Slot>();
-        slots.addAll(menu.getSlots(SlotSemantics.PLAYER_HOTBAR));
-        slots.addAll(menu.getSlots(SlotSemantics.PLAYER_INVENTORY));
-        slots.addAll(menu.getSlots(menu.getEtMenuType().getSlotSemanticGrid()));
-        return slots;
-    }
-
-    @Override
-    public List<Slot> getCraftingSlots(T menu) {
-        return menu.getSlots(menu.getEtMenuType().getSlotSemanticGrid());
-    }
-
-    @Override
-    public @Nullable Slot getOutputSlot(T menu) {
-        for(var slot : menu.getSlots(menu.getEtMenuType().getSlotSemanticResult())) {
-            return slot;
-        }
-        return null;
-    }
-
-    @Override
-    public EmiPlayerInventory getInventory(AbstractContainerScreen<T> screen) {
-        if (!AEConfig.instance().isExposeNetworkInventoryToEmi()) {
-            return StandardRecipeHandler.super.getInventory(screen);
+        boolean craftingRecipe = isCraftingRecipe(recipe, emiRecipe);
+        if (!craftingRecipe) {
+            return Result.createNotApplicable();
         }
 
-        var list = new ArrayList<EmiStack>();
-
-        for (Slot slot : getInputSources(screen.getMenu())) {
-            list.add(EmiStack.of(slot.getItem()));
+        if (!fitsInNxNGrid(recipe, emiRecipe, menuType.getGridSize())) {
+            return Result.createFailed(ItemModText.RECIPE_TOO_LARGE.text());
         }
 
-        if (screen.getMenu() instanceof MEStorageMenu menu) {
-            var repo = menu.getClientRepo();
+        if (recipe == null) {
+            recipe = createFakeRecipe(emiRecipe);
+        }
 
-            if (repo != null) {
-                for (var entry : repo.getAllEntries()) {
-                    if (entry.getStoredAmount() <= 0) {
-                        continue; // Skip items that are only craftable
-                    }
-                    var emiStack = EmiStackHelper
-                            .toEmiStack(new GenericStack(entry.getWhat(), entry.getStoredAmount()));
-                    if (emiStack != null) {
-                        list.add(emiStack);
-                    }
-                }
+        // Find missing ingredient
+        var slotToIngredientMap = getGuiSlotToIngredientMap(recipe, menuType.getSize());
+        var missingSlots = menu.findMissingIngredients(slotToIngredientMap);
+
+        if (missingSlots.missingSlots().size() == slotToIngredientMap.size()) {
+            // All missing, can't do much...
+            return Result.createFailed(ItemModText.NO_ITEMS.text(), missingSlots.missingSlots());
+        }
+
+        if (!doTransfer) {
+            if (missingSlots.anyMissingOrCraftable()) {
+                // Highlight the slots with missing ingredients
+                return new Result.PartiallyCraftable(missingSlots);
+            }
+        } else {
+            // Thank you RS for pioneering this amazing feature! :)
+            boolean craftMissing = AbstractContainerScreen.hasControlDown();
+            ItemListTermCraftingHelper.performTransfer(menu, recipeId, recipe, craftMissing);
+        }
+
+        // No error
+        return Result.createSuccessful();
+    }
+
+    private Recipe<?> createFakeRecipe(EmiRecipe display) {
+        var ingredients = NonNullList.withSize(menuType.getGridSize(), Ingredient.EMPTY);
+
+        for (int i = 0; i < Math.min(display.getInputs().size(), ingredients.size()); i++) {
+            var ingredient = Ingredient.of(display.getInputs().get(i).getEmiStacks().stream()
+                    .map(EmiStack::getItemStack)
+                    .filter(is -> !is.isEmpty()));
+            ingredients.set(i, ingredient);
+        }
+
+        var pattern = new ShapedRecipePattern(menuType.getGridSize(), menuType.getGridSize(), ingredients, Optional.empty());
+        return new ShapedTableRecipe(pattern,ItemStack.EMPTY, menuType.getTier());
+    }
+
+
+    public static Map<Integer, Ingredient> getGuiSlotToIngredientMap(Recipe<?> recipe,int gridWidth) {
+        // Ensure ingredients fit in NxN grid
+        var raw = recipe.getIngredients();
+        java.util.List<Ingredient> ingredients;
+        if (recipe instanceof ITableRecipe table) {
+            ingredients = ETCraftingRecipeHelper.ensureNxNCraftingMatrix(table);
+        } else {
+            ingredients = raw;
+        }
+        // Clip to grid capacity
+        int max = gridWidth * gridWidth;
+        int count = Math.min(ingredients.size(), max);
+        var result = new HashMap<Integer, Ingredient>(count);
+        for (int i = 0; i < count; i++) {
+            var guiSlot = (i / gridWidth) * gridWidth + (i % gridWidth);
+            var ing = ingredients.get(i);
+            if (!ing.isEmpty()) {
+                result.put(guiSlot, ing);
             }
         }
-
-        return new EmiPlayerInventory(list);
-    }
-
-    @Override
-    public boolean canCraft(EmiRecipe recipe, EmiCraftContext<T> context) {
-        return true;
-    }
-
-    @Override
-    public boolean craft(EmiRecipe recipe, EmiCraftContext<T> context) {
-        return StandardRecipeHandler.super.craft(recipe, context);
-    }
-
-    @Override
-    public void render(EmiRecipe recipe, EmiCraftContext<T> context, List<Widget> widgets, GuiGraphics draw) {
-        StandardRecipeHandler.super.render(recipe, context, widgets, draw);
-    }
-
-    private void transferRecipe(T menu, RecipeHolder<?> holder, EmiRecipe emiRecipe, boolean doTransfer) {
-
+        return result;
     }
 }

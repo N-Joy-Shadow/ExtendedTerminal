@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.myogoo.extendedterminal.init.ETCreativeTab;
 import com.myogoo.extendedterminal.init.ETItems;
 import com.myogoo.extendedterminal.init.ETMenus;
+import com.myogoo.extendedterminal.init.ETNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -34,10 +35,9 @@ public class ExtendedTerminal {
         ETCreativeTab.REGISTER.register(modEventBus);
         ETItems.REGISTER.register(modEventBus);
         ETMenus.REGISTER.register(modEventBus);
-
         NeoForge.EVENT_BUS.register(this);
 
-
+        modEventBus.addListener(ETNetwork::init);
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }

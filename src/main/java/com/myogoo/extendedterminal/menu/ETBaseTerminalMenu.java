@@ -9,6 +9,8 @@ import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.ICraftingGridMenu;
 import appeng.helpers.InventoryAction;
 import appeng.me.storage.LinkStatusRespectingInventory;
+import appeng.menu.SlotSemantic;
+import appeng.menu.SlotSemantics;
 import appeng.menu.me.common.MEStorageMenu;
 import appeng.menu.me.crafting.CraftConfirmMenu;
 import appeng.menu.me.items.CraftingTermMenu;
@@ -23,6 +25,7 @@ import com.google.common.base.Preconditions;
 import com.myogoo.extendedterminal.menu.slot.ETArmorSlot;
 import com.myogoo.extendedterminal.menu.slot.ETBaseCraftingSlot;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -36,48 +39,20 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMenu {
-    private RecipeHolder<ITableRecipe> currentRecipe;
-    private final ETBaseCraftingSlot outputSlot;
-    private final ISegmentedInventory craftingInventoryHost;
-    private final CraftingMatrixSlot[] craftingSlots;
-    private final ETArmorSlot[] armorSlots = new ETArmorSlot[4];
-    private final ETMenuType etMenuType;
-    @Nullable
-    private TableCraftingInput lastTestedInput;
+public abstract class ETBaseTerminalMenu<R extends Recipe<?>> extends MEStorageMenu implements ICraftingGridMenu {
+    protected RecipeHolder<R> currentRecipe;
+    protected final ETArmorSlot[] armorSlots = new ETArmorSlot[4];
     private static final String ACTION_CLEAR_TO_PLAYER = "clearToPlayer";
 
-
-    public ETBaseTerminalMenu(MenuType<?> menuType, int id, Inventory ip, ITerminalHost host, ETMenuType etMenuType) {
+    public ETBaseTerminalMenu(MenuType<?> menuType, int id, Inventory ip, ITerminalHost host) {
         super(menuType, id, ip, host);
-        this.etMenuType = etMenuType;
-
-        this.craftingInventoryHost = (ISegmentedInventory) host;
-        this.craftingSlots = new CraftingMatrixSlot[etMenuType.getGridSize()];
-        var craftingGridInv = this.craftingInventoryHost
-                .getSubInventory(etMenuType.getCraftingInventory());
-        for(int i = 0; i < etMenuType.getGridSize(); i++) {
-            this.addSlot(this.craftingSlots[i] = new CraftingMatrixSlot(this,craftingGridInv,i), etMenuType.getSlotSemanticGrid());
-        }
-
-        var linkStatusInventory = new LinkStatusRespectingInventory(host.getInventory(), this::getLinkStatus);
-        this.addSlot(this.outputSlot = new ETBaseCraftingSlot(this.getPlayerInventory().player, this.getActionSource(),
-                        this.energySource, linkStatusInventory, craftingGridInv, craftingGridInv, this,etMenuType),
-                etMenuType.getSlotSemanticResult());
-
-        updateCurrentRecipeAndOutput(true);
 
         registerClientAction(ACTION_CLEAR_TO_PLAYER, this::clearToPlayerInventory);
-
         var armorInventory = new AppEngInternalInventory(4);
 
         for(int i = 0; i < Inventory.ALL_ARMOR_SLOTS.length; i++) {
             this.addSlot(this.armorSlots[i] = new ETArmorSlot(armorInventory,Inventory.ALL_ARMOR_SLOTS[i]), ETSlotSemantics.PLAYER_ARMOR);
-        }
-
-        for(int i = 0; i < Inventory.ALL_ARMOR_SLOTS.length; i++) {
-            var armor = this.getPlayerInventory().getArmor(i);
-            this.armorSlots[i].set(armor);
+            this.armorSlots[i].set(this.getPlayerInventory().getArmor(i));
         }
     }
 
@@ -89,44 +64,32 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
         super.onSlotChange(slot);
     }
 
-    public void clearCraftingGrid() {
-        Preconditions.checkState(isClientSide());
-        CraftingMatrixSlot slot = craftingSlots[0];
-        var p = new InventoryActionPacket(InventoryAction.MOVE_REGION, slot.index, 0);
-        PacketDistributor.sendToServer(p);
-    }
-
-    private void updateCurrentRecipeAndOutput(boolean forceUpdate) {
-        var testItems = new ArrayList<ItemStack>(this.craftingSlots.length);
-        for(var craftingSlot : craftingSlots) {
-            testItems.add(craftingSlot.getItem().copy());
-        }
-        var testInput = TableCraftingInput.of(etMenuType.getSize(),etMenuType.getSize(),testItems,etMenuType.getTier());
-
-        if (testInput.equals(this.lastTestedInput) && !forceUpdate) {
-            return;
-        }
-
-        var level = getPlayer().level();
-        this.currentRecipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), testInput, level)
-                .orElse(null);
-        if(this.currentRecipe == null) {
-            this.outputSlot.set(ItemStack.EMPTY);
-        } else {
-            this.outputSlot.set(this.currentRecipe.value().assemble(testInput,level.registryAccess()));
-        }
-    }
-    public RecipeHolder<ITableRecipe> getCurrentRecipe() {
+    public RecipeHolder<R> getCurrentRecipe() {
         return this.currentRecipe;
     }
 
-    public ETMenuType getEtMenuType() {
-        return etMenuType;
+    //Abstract Methods
+    public abstract void clearCraftingGrid();
+
+    public abstract SlotSemantic getCraftingGridSlotSemantic();
+
+    public abstract SlotSemantic getOutputSlotSemantic();
+
+    public abstract int getCraftingMatrixSize();
+
+    public abstract int getCraftingMatrixWidth();
+
+    protected abstract void updateCurrentRecipeAndOutput(boolean forceUpdate);
+
+    public int getCraftingMatrixHeight() {
+        return this.getCraftingMatrixWidth();
     }
+
+    //Override Methods
 
     @Override
     public boolean hasIngredient(Ingredient ingredient, Object2IntOpenHashMap<Object> reservedAmounts) {
-        for (var slot : getSlots(etMenuType.getSlotSemanticGrid())) {
+        for (var slot : getSlots(this.getCraftingGridSlotSemantic())) {
             var stackInSlot = slot.getItem();
             if (!stackInSlot.isEmpty() && ingredient.test(stackInSlot)) {
                 var reservedAmount = reservedAmounts.getOrDefault(slot, 0);
@@ -137,11 +100,6 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
             }
         }
         return super.hasIngredient(ingredient, reservedAmounts);
-    }
-
-    @Override
-    public InternalInventory getCraftingMatrix() {
-        return this.craftingInventoryHost.getSubInventory(etMenuType.getCraftingInventory());
     }
 
     @Override
@@ -157,22 +115,6 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
     @Override
     public void slotsChanged(Container inventory) {
         updateCurrentRecipeAndOutput(false);
-    }
-
-    @Override
-    public void doAction(ServerPlayer player, InventoryAction action, int slot, long id) {
-        var s = this.getSlot(slot);
-        if(s instanceof ETBaseCraftingSlot craftingSlot) {
-            switch (action) {
-                case CRAFT_SHIFT:
-                case CRAFT_ALL:
-                case CRAFT_ITEM:
-                case CRAFT_STACK:
-                    craftingSlot.doClick(action, player);
-            }
-            return;
-        }
-        super.doAction(player, action, slot, id);
     }
 
     protected boolean isCraftable(ItemStack itemStack) {
@@ -257,7 +199,7 @@ public class ETBaseTerminalMenu extends MEStorageMenu implements ICraftingGridMe
             return;
         }
 
-        var craftingGridInv = this.craftingInventoryHost.getSubInventory(etMenuType.getCraftingInventory());
+        var craftingGridInv = this.getCraftingMatrix();
         var playerInv = new PlayerInternalInventory(getPlayerInventory());
 
         for (int i = 0; i < craftingGridInv.size(); ++i) {

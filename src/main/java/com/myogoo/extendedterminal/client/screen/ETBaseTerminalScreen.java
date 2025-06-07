@@ -9,7 +9,7 @@ import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import appeng.menu.SlotSemantic;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.myogoo.extendedterminal.menu.ETBaseTerminalMenu;
+import com.myogoo.extendedterminal.menu.extendedcrafting.ExtendedTerminalBaseMenu;
 import com.myogoo.extendedterminal.menu.slot.ETArmorSlot;
 import com.myogoo.extendedterminal.menu.slot.ETBaseCraftingSlot;
 import net.minecraft.network.chat.Component;
@@ -22,7 +22,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
-public class ETBaseTerminalScreen<T extends ETBaseTerminalMenu> extends MEStorageScreen<T> {
+public class ETBaseTerminalScreen<T extends ExtendedTerminalBaseMenu> extends MEStorageScreen<T> {
     public ETBaseTerminalScreen(T menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
 
@@ -76,7 +76,7 @@ public class ETBaseTerminalScreen<T extends ETBaseTerminalMenu> extends MEStorag
     @Override
     public void init() {
         super.init();
-        var etMenuType = this.getMenu().getEtMenuType();
+        var etMenuType = this.getMenu().getETMenuType();
         drawCraftingSlot(etMenuType.getSlotSemanticGrid(),etMenuType.getSize());
     }
 
