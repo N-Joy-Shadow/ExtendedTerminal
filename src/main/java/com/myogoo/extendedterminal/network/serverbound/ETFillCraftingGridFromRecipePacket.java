@@ -163,6 +163,7 @@ public record ETFillCraftingGridFromRecipePacket(
                     // If more is remaining, try moving it to the player inventory
                     player.getInventory().add(currentItem);
 
+                    //여기까진 ok
                     craftMatrix.setItemDirect(x, currentItem.isEmpty() ? ItemStack.EMPTY : currentItem);
                 }
             }
@@ -190,7 +191,6 @@ public record ETFillCraftingGridFromRecipePacket(
             if (currentItem.isEmpty()) {
                 currentItem = takeIngredientFromPlayer(cct, player, ingredient);
             }
-
             craftMatrix.setItemDirect(x, currentItem);
 
             // If we couldn't find the item, schedule its autocrafting
