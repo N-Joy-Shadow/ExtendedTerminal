@@ -1,0 +1,24 @@
+{
+  "type": "extendedcrafting:shaped_table",
+  "tier": 3,
+  "pattern": [
+    "AAAAAAA",
+    "ABBBBBA",
+    "ABAAABA",
+    "ABABABA",
+    "ABAAABA",
+    "ABBBBBA",
+    "AAAAAAA"
+  ],
+  "key": {
+    "A": {
+      "item": "ae2:wireless_receiver"
+    },
+    "B": {
+      "item": "ae2:fluix_upgrade_smithing_template"
+    }
+  },
+  "result": {
+    "id": "ae2:logic_processor"
+  }
+}

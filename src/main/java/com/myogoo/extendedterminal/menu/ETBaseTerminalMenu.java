@@ -35,6 +35,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -113,7 +114,7 @@ public abstract class ETBaseTerminalMenu<R extends Recipe<?>> extends MEStorageM
     }
 
     @Override
-    public void slotsChanged(Container inventory) {
+    public void slotsChanged(@NotNull Container inventory) {
         updateCurrentRecipeAndOutput(false);
     }
 

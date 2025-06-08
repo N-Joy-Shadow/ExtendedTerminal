@@ -15,8 +15,10 @@ import appeng.menu.me.items.CraftingTermMenu;
 import appeng.menu.slot.CraftingMatrixSlot;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.PlayerInternalInventory;
+import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.api.TableCraftingInput;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
+import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.google.common.base.Preconditions;
 import com.myogoo.extendedterminal.menu.ETBaseTerminalMenu;
@@ -91,15 +93,17 @@ public class ExtendedTerminalBaseMenu extends ETBaseTerminalMenu<ITableRecipe> {
         for(var craftingSlot : craftingSlots) {
             testItems.add(craftingSlot.getItem().copy());
         }
-        var testInput = TableCraftingInput.of(etMenuType.getSize(),etMenuType.getSize(),testItems,etMenuType.getTier());
+        var testInput = TableCraftingInput.of(etMenuType.getSize(),etMenuType.getSize(),testItems,this.etMenuType.getTier());
 
-        if (testInput.equals(this.lastTestedInput) && !forceUpdate) {
+        if (!forceUpdate && Objects.equals(this.lastTestedInput,testInput)) {
             return;
         }
 
         var level = getPlayer().level();
         this.currentRecipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), testInput, level)
                 .orElse(null);
+        this.lastTestedInput = testInput;
+
         if(this.currentRecipe == null) {
             this.outputSlot.set(ItemStack.EMPTY);
         } else {

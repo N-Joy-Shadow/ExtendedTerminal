@@ -1,5 +1,6 @@
 {
   "type": "extendedcrafting:shapeless_table",
+  "tier": 2,
   "ingredients": [
     {
       "item": "minecraft:oak_log"

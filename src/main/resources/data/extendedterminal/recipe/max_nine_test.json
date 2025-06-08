@@ -1,0 +1,48 @@
+{
+  "type": "extendedcrafting:shaped_table",
+  "tier": 3,
+  "pattern": [
+    "A     B",
+    " C   D ",
+    "  E F  ",
+    "   G   ",
+    "    H  ",
+    "     I ",
+    "      J"
+  ],
+  "key": {
+    "A": {
+      "item": "extendedcrafting:black_iron_ingot"
+    },
+    "B": {
+      "item": "extendedcrafting:redstone_ingot"
+    },
+    "C": {
+      "item": "extendedcrafting:the_ultimate_ingot"
+    },
+    "D": {
+      "item": "minecraft:iron_ingot"
+    },
+    "E": {
+      "item": "extendedcrafting:crystaltine_ingot"
+    },
+    "F": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "G": {
+      "item": "extendedcrafting:ender_ingot"
+    },
+    "H": {
+      "item": "extendedcrafting:enhanced_ender_ingot"
+    },
+    "I": {
+      "item": "extendedcrafting:enhanced_redstone_ingot"
+    },
+    "J": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "result": {
+    "id": "ae2:wireless_receiver"
+  }
+}
