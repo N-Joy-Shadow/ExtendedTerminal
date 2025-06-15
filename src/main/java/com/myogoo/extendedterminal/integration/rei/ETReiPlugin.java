@@ -1,7 +1,6 @@
 package com.myogoo.extendedterminal.integration.rei;
 
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
-import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.forge.REIPluginClient;
 
 @REIPluginClient

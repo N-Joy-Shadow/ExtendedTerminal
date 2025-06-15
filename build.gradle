@@ -11,8 +11,8 @@ group = mod_group_id
 repositories {
     mavenLocal()
     mavenCentral()
+    //jei
     maven {
-        // location of the maven that hosts JEI files since January 2023
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
     }
@@ -23,9 +23,13 @@ repositories {
             includeGroup "de.mari_023"
         }
     }
+
+    // extended crafting
     maven {
         url 'https://maven.blakesmods.com'
     }
+
+    //rei
     maven {
         url "https://maven.shedaniel.me"
     }
@@ -33,6 +37,8 @@ repositories {
         name = "Curios"
         url = "https://maven.theillusivec4.top/"
     }
+
+    //emi
     maven {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
@@ -136,10 +142,11 @@ dependencies {
     implementation "de.mari_023:ae2wtlib_api:${project.AE2WTLib_version}"
     runtimeOnly "de.mari_023:ae2wtlib:${project.AE2WTLib_version}"
 
+    //compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${JEI_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${JEI_version}"
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${REI_version}"
     compileOnly "dev.emi:emi-neoforge:${EMI_version}:api"
-    switch (project.runtime_nei) {
+    switch (project.itemListMod) {
         case "jei":
             runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${JEI_version}"
             break;
@@ -149,6 +156,11 @@ dependencies {
         case "emi":
             runtimeOnly "dev.emi:emi-neoforge:${EMI_version}"
             break;
+        case "emjei":
+            runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${JEI_version}"
+            runtimeOnly "dev.emi:emi-neoforge:${EMI_version}"
+            break;
+
     }
 }
 

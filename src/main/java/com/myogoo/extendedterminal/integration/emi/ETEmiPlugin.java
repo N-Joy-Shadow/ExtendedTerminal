@@ -19,8 +19,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
 
-@EmiEntrypoint
-public class ETEmiPlugin implements EmiPlugin {
+public class ETEmiPlugin {
 
     private static final ItemStack[] BasicTables = {
             ETItems.BASIC_TERMINAL_PART.stack(),
@@ -46,7 +45,7 @@ public class ETEmiPlugin implements EmiPlugin {
             ModBlocks.ULTIMATE_AUTO_TABLE.get().asItem().getDefaultInstance()
     };
 
-    @Override
+    //@Override
     public void register(EmiRegistry registry) {
 
         registry.addCategory(ExtendedCraftingTableRecipe.BASIC_TABLE_CRAFTING_CATEGORY);

@@ -1,83 +1,18 @@
 {
-  "type": "extendedcrafting:shapeless_table",
+  "type": "extendedcrafting:shaped_table",
   "tier": 2,
-  "ingredients": [
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    },
-    {
-      "item": "minecraft:oak_log"
-    }
+  "pattern": [
+    "AAAAA",
+    "AAAAA",
+    "AAAAA",
+    "AAAAA",
+    "AAAAA"
   ],
+  "key" : {
+    "A": {
+      "item": "minecraft:quartz_bricks"
+    }
+  },
   "result": {
     "id": "minecraft:oak_log"
   }

@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static com.myogoo.extendedterminal.integration.ItemListTermCraftingHelper.getGuiSlotToIngredientMap;
+
 public class EmiTerminalCraftingHandler<T extends ExtendedTerminalBaseMenu> extends AbstractTableRecipeHandler<T> {
     public final static EmiTerminalCraftingHandler<BasicTerminalMenu> EmiBasicTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(BasicTerminalMenu.class,ETMenuType.BASIC_TERMINAL);
     public final static EmiTerminalCraftingHandler<AdvancedTerminalMenu> EmiAdvancedTerminalCraftingHandler = new EmiTerminalCraftingHandler<>(AdvancedTerminalMenu.class,ETMenuType.ADVANCED_TERMINAL);
@@ -91,26 +93,5 @@ public class EmiTerminalCraftingHandler<T extends ExtendedTerminalBaseMenu> exte
     }
 
 
-    public static Map<Integer, Ingredient> getGuiSlotToIngredientMap(Recipe<?> recipe,int gridWidth) {
-        // Ensure ingredients fit in NxN grid
-        var raw = recipe.getIngredients();
-        java.util.List<Ingredient> ingredients;
-        if (recipe instanceof ITableRecipe table) {
-            ingredients = ETCraftingRecipeHelper.ensureNxNCraftingMatrix(table);
-        } else {
-            ingredients = raw;
-        }
-        // Clip to grid capacity
-        int max = gridWidth * gridWidth;
-        int count = Math.min(ingredients.size(), max);
-        var result = new HashMap<Integer, Ingredient>(count);
-        for (int i = 0; i < count; i++) {
-            var guiSlot = (i / gridWidth) * gridWidth + (i % gridWidth);
-            var ing = ingredients.get(i);
-            if (!ing.isEmpty()) {
-                result.put(guiSlot, ing);
-            }
-        }
-        return result;
-    }
+
 }

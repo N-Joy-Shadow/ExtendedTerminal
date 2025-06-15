@@ -33,6 +33,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static com.myogoo.extendedterminal.integration.ItemListTermCraftingHelper.ensureNxNCraftingMatrix;
+
 public record ETFillCraftingGridFromRecipePacket(
         @Nullable ResourceLocation recipeId,
         List<ItemStack> ingredientTemplates,
@@ -240,7 +242,7 @@ public record ETFillCraftingGridFromRecipePacket(
         if (this.recipeId != null) {
             var recipe = player.level().getRecipeManager().byKey(this.recipeId).orElse(null);
             if (recipe != null) {
-                return ETCraftingRecipeHelper.ensureNxNCraftingMatrix(recipe.value());
+                return ensureNxNCraftingMatrix(recipe.value());
             }
         }
 
@@ -287,4 +289,11 @@ public record ETFillCraftingGridFromRecipePacket(
                 .findAny();
     }
 
+    private int calculateCraftingGridOffsetX () {
+        return 0;
+    }
+
+    private int calculateCraftingGridOffsetY () {
+        return 0;
+    }
 }
